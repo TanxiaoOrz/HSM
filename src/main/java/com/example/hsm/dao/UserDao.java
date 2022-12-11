@@ -42,9 +42,9 @@ public class UserDao {
         try{
             PreparedStatement statement = connection.prepareStatement("insert into hsm.user ( UserPass, UserType, UserCode) values (?,?,?)");
 
-            statement.setString(1, UserCode);
-            statement.setString(2, UserPass);
-            statement.setString(3, UserType);
+            statement.setString(3, UserCode);
+            statement.setString(1, UserPass);
+            statement.setString(2, UserType);
 
             statement.execute();
 
