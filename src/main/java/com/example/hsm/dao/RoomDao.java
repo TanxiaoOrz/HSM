@@ -75,4 +75,96 @@ public class RoomDao {
         }
     }
 
+    public static ArrayList<Room> getRoomEmpty(){
+        Connection connection = DbConnection.getInstance().getConnection();
+        try {
+
+            Statement statement = connection.createStatement();
+            ResultSet set = statement.executeQuery("SELECT * FROM hsm.room_empty");
+
+            ArrayList<Room> rooms = new ArrayList<>();
+            while (set.next()){
+
+                Room room =new Room();
+                room.setRid(set.getInt("Rid"));
+                room.setFloor(set.getString("Floor"));
+                room.setFeature(set.getString("Feature"));
+                room.setOrientation(set.getString("Orientation"));
+
+                Type type = new Type();
+                type.setTid(set.getInt("Tid"));
+                type.setTypeName(set.getString("TypeName"));
+                type.setTypePrice(set.getString("TypePrice"));
+
+                room.setType(type);
+
+                rooms.add(room);
+            }
+
+            return rooms;
+
+
+        }catch (SQLException | NullPointerException exception){
+            exception.printStackTrace();
+            return null;
+        }
+    }
+
+    public static boolean modifyRoom(Room room){
+        Connection connection = DbConnection.getInstance().getConnection();
+        try {
+            PreparedStatement statement = connection.prepareStatement("UPDATE `hsm`.`room` SET `Floor` = ?, `Feature` = ?, `Orientation` = ?, `Tid` = ? WHERE (`Rid` = ?);");
+            statement.setString(1, room.getFloor());
+            statement.setString(2, room.getFeature());
+            statement.setString(3,room.getOrientation());
+            statement.setInt(4,room.getType().getTid());
+            statement.setInt(5,room.getRid());
+            statement.execute();
+
+            statement.close();
+            connection.close();
+
+            return true;
+        }catch (SQLException | NullPointerException exception){
+            exception.printStackTrace();
+            return false;
+        }
+    }
+
+    public static Room getRoom(Integer Rid){
+        Connection connection = DbConnection.getInstance().getConnection();
+        try {
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM hsm.room_type where Rid = ?");
+            statement.setInt(1,Rid);
+            ResultSet set = statement.executeQuery();
+
+            set.next();
+
+            Room room =new Room();
+            room.setRid(set.getInt("Rid"));
+            room.setFloor(set.getString("Floor"));
+            room.setFeature(set.getString("Feature"));
+            room.setOrientation(set.getString("Orientation"));
+
+            Type type = new Type();
+            type.setTid(set.getInt("Tid"));
+            type.setTypeName(set.getString("TypeName"));
+            type.setTypePrice(set.getString("TypePrice"));
+
+            room.setType(type);
+
+
+            set.close();
+            statement.close();
+            connection.close();
+
+            room.setBooks(BookDao.getBookByRid(Rid));
+
+            return room;
+        }catch (SQLException | NullPointerException exception){
+            exception.printStackTrace();
+            return null;
+        }
+    }
+
 }
