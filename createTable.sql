@@ -31,7 +31,7 @@ CREATE TABLE `hsm`.`book` (
                               `Rid` INT NOT NULL,
                               `Uid` INT NOT NULL,
                               `StartTime` DATE NOT NULL,
-                              `End` DATE NOT NULL,
+                              `EndTime` DATE NOT NULL,
                               `Price` DECIMAL NOT NULL,
                               PRIMARY KEY (`Bid`),
                               INDEX `Rid_idx` (`Rid` ASC) VISIBLE,
@@ -56,4 +56,81 @@ ALTER TABLE `hsm`.`book`
     CHANGE COLUMN `Uid` `UserCode` VARCHAR(45) NOT NULL ,
 DROP INDEX `Uid_idx` ;
 ;
+
+ALTER TABLE `hsm`.`user`
+    CHANGE COLUMN `UserCode` `UserCode` VARCHAR(45) NOT NULL AFTER `Uid`;
+
+ALTER TABLE `hsm`.`book`
+    ADD COLUMN `Checked` ENUM("yes", "no") NOT NULL DEFAULT 'no' AFTER `Price`,
+    ADD COLUMN `Paid` ENUM("yes", "no") NOT NULL DEFAULT 'no' AFTER `Checked`;
+
+CREATE
+ALGORITHM = UNDEFINED
+    DEFINER = `root`@`localhost`
+    SQL SECURITY DEFINER
+VIEW `room_type` AS
+SELECT
+    `room`.`Rid` AS `Rid`,
+    `room`.`Floor` AS `Floor`,
+    `room`.`Feature` AS `Feature`,
+    `room`.`Orientation` AS `Orientation`,
+    `room`.`Tid` AS `Tid`,
+    `type`.`TypeName` AS `TypeName`,
+    `type`.`TypePrice` AS `TypePrice`
+FROM
+    (`room`
+        LEFT JOIN `type` ON ((`type`.`Tid` = `room`.`Tid`)))
+
+ALTER TABLE `hsm`.`book`
+    CHANGE COLUMN `Bid` `Bid` INT NOT NULL AUTO_INCREMENT ;
+
+CREATE
+ALGORITHM = UNDEFINED
+    DEFINER = `root`@`localhost`
+    SQL SECURITY DEFINER
+VIEW `new_view` AS
+SELECT
+    `room_type`.`Rid` AS `Rid`,
+    `room_type`.`Floor` AS `Floor`,
+    `room_type`.`Feature` AS `Feature`,
+    `room_type`.`Orientation` AS `Orientation`,
+    `room_type`.`Tid` AS `Tid`,
+    `room_type`.`TypeName` AS `TypeName`,
+    `room_type`.`TypePrice` AS `TypePrice`
+FROM
+    `room_type`
+WHERE
+        `room_type`.`Rid` IN (SELECT
+                                  `book`.`Rid`
+                              FROM
+                                  `book`
+                              WHERE
+                                  (NOW() BETWEEN `book`.`StartTime` AND `book`.`EndTime`))
+        IS FALSE
+
+DROP VIEW IF EXISTS `hsm`.`new_view` ;
+USE `hsm`;
+CREATE
+OR REPLACE ALGORITHM = UNDEFINED
+    DEFINER = `root`@`localhost`
+    SQL SECURITY DEFINER
+VIEW `room_empty` AS
+SELECT
+    `room_type`.`Rid` AS `Rid`,
+    `room_type`.`Floor` AS `Floor`,
+    `room_type`.`Feature` AS `Feature`,
+    `room_type`.`Orientation` AS `Orientation`,
+    `room_type`.`Tid` AS `Tid`,
+    `room_type`.`TypeName` AS `TypeName`,
+    `room_type`.`TypePrice` AS `TypePrice`
+FROM
+    `room_type`
+WHERE
+        `room_type`.`Rid` IN (SELECT
+                                  `book`.`Rid`
+                              FROM
+                                  `book`
+                              WHERE
+                                  (NOW() BETWEEN `book`.`StartTime` AND `book`.`EndTime`))
+        IS FALSE;
 
