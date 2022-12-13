@@ -134,3 +134,26 @@ WHERE
                                   (NOW() BETWEEN `book`.`StartTime` AND `book`.`EndTime`))
         IS FALSE;
 
+DROP TRIGGER IF EXISTS `hsm`.`book_BEFORE_INSERT`;
+
+DELIMITER $$
+USE `hsm`$$
+CREATE DEFINER = CURRENT_USER TRIGGER `hsm`.`book_BEFORE_INSERT` BEFORE INSERT ON `book` FOR EACH ROW
+BEGIN
+	set @price = (select TypePrice from hsm.room_type where room_type.Rid = new.Rid);
+    set new.price = @price * DATEDIFF(new.EndTime, new.StartTime);
+END$$
+DELIMITER ;
+
+DROP TRIGGER IF EXISTS `hsm`.`book_BEFORE_UPDATE`;
+
+DELIMITER $$
+USE `hsm`$$
+CREATE DEFINER = CURRENT_USER TRIGGER `hsm`.`book_BEFORE_UPDATE` BEFORE UPDATE ON `book` FOR EACH ROW
+BEGIN
+	if (new.EndTIme != old.EndTIme) then
+		set @price = (select TypePrice from hsm.room_type where room_type.Rid = new.Rid);
+		set new.Price = @Price * DATEDIFF(new.EndTime, old.EndTime) +old.Price;
+end if;
+END$$
+DELIMITER ;

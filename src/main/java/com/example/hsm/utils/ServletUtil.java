@@ -24,4 +24,9 @@ public class ServletUtil {
             return UserType.equals(user.getUserType());
         }
     }
+
+    public  static  boolean checkLogin(HttpServletRequest request){
+        User user =(User) request.getSession().getAttribute(SessionAttribute.UserAttribute);
+        return user != null;
+    }
 }
