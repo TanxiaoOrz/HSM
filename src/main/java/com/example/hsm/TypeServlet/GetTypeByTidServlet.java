@@ -11,7 +11,7 @@ import javax.servlet.annotation.*;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-@WebServlet(name = "GetTypeByTidServlet", value = "/GetTypeByTidServlet")
+@WebServlet(name = "GetTypeByTidServlet", value = "/GetTypeByTid")
 public class GetTypeByTidServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

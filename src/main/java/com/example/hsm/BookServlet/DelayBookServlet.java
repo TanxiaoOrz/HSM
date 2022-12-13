@@ -21,6 +21,7 @@ public class DelayBookServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         if (ServletUtil.checkUserType(request, User.TypeReception)){
+            ServletUtil.setCharsetJSON(request,response);
             String s;
             if (BookDao.delayBook(Integer.parseInt(request.getParameter("Bid")), Date.valueOf(request.getParameter("EndTime") ))){
                 s = "延长成功";

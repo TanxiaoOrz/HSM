@@ -8,7 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
+import java.sql.Date;
 
 public class BookDao {
 
@@ -29,8 +29,9 @@ public class BookDao {
     public static boolean newBook(Book book){
         Connection connection = DbConnection.getInstance().getConnection();
         try {
-            PreparedStatement statement = connection.prepareStatement("Select Bid from hsm.book where ? > StartTime;");
+            PreparedStatement statement = connection.prepareStatement("Select Bid from hsm.book where ? > StartTime and Rid = ?;");
             statement.setDate(1,book.getEndTime());
+            statement.setInt(2,book.getRid());
             ResultSet set = statement.executeQuery();
             if (set.next()){
                 return false;
@@ -38,8 +39,9 @@ public class BookDao {
             statement.close();
             set.close();
 
-            statement = connection.prepareStatement("SELECT * from hsm.book where ? < book.EndTime");
+            statement = connection.prepareStatement("SELECT * from hsm.book where ? < book.EndTime and Rid = ?");
             statement.setDate(1,book.getEndTime());
+            statement.setInt(2,book.getRid());
             set = statement.executeQuery();
             if (set.next()){
                 return false;
@@ -52,6 +54,7 @@ public class BookDao {
             statement.setString(2, book.getUserCode());
             statement.setDate(3,book.getStartTime());
             statement.setDate(4,book.getEndTime());
+            //System.out.println(statement);
 
             statement.execute();
             statement.close();
@@ -108,6 +111,7 @@ public class BookDao {
         try {
             PreparedStatement statement = connection.prepareStatement("UPDATE hsm.book set Checked = 'yes' where Bid = ?");
             statement.setInt(1,Bid);
+            System.out.println(statement);
 
             return true;
 
@@ -121,8 +125,9 @@ public class BookDao {
         Connection connection = DbConnection.getInstance().getConnection();
         try {
             PreparedStatement statement = connection.prepareStatement("UPDATE hsm.book set EndTime = ? where Bid = ?");
-            statement.setInt(1,Bid);
-
+            statement.setDate(1,EndTime);
+            statement.setInt(2,Bid);
+            statement.execute();
             return true;
 
         }catch (SQLException | NullPointerException exception){
@@ -136,7 +141,7 @@ public class BookDao {
         try {
             PreparedStatement statement = connection.prepareStatement("UPDATE hsm.book set Paid = 'yes' where Bid = ?");
             statement.setInt(1,Bid);
-
+            statement.execute();
             return true;
 
         }catch (SQLException | NullPointerException exception){

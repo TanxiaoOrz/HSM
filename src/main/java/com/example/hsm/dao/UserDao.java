@@ -15,9 +15,10 @@ public class UserDao {
             PreparedStatement statement = connection.prepareStatement("SELECT * from hsm.user where UserCode = ? and UserPass = ? and UserType= ?");
             statement.setString(1, UserCode);
             statement.setString(2, UserPass);
-            statement.setString(3,UserType);
+            statement.setString(3, UserType);
             //System.out.println(statement);
             ResultSet resultSet = statement.executeQuery();
+
             resultSet.next();
             User user = new User();
             user.setUid(resultSet.getInt("Uid"));

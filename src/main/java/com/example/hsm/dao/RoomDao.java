@@ -119,6 +119,7 @@ public class RoomDao {
             statement.setString(3,room.getOrientation());
             statement.setInt(4,room.getType().getTid());
             statement.setInt(5,room.getRid());
+            //System.out.println(statement);
             statement.execute();
 
             statement.close();

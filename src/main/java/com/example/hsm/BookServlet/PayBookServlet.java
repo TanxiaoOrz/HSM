@@ -20,6 +20,8 @@ public class PayBookServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         if (ServletUtil.checkUserType(request, User.TypeReception)){
+            ServletUtil.setCharsetJSON(request,response);
+
             String s;
             if (BookDao.payBook(Integer.parseInt(request.getParameter("Bid")))){
                 s = "付款成功";

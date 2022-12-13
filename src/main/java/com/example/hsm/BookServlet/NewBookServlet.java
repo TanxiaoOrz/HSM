@@ -23,10 +23,12 @@ public class NewBookServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         if (ServletUtil.checkLogin(request)){
+            ServletUtil.setCharsetJSON(request,response);
+
             Book book = new Book();
             book.setRid(Integer.parseInt(request.getParameter("Rid")));
             book.setStartTime(Date.valueOf(request.getParameter("StartTime")));
-            book.setStartTime(Date.valueOf(request.getParameter("EndTime")));
+            book.setEndTime(Date.valueOf(request.getParameter("EndTime")));
 
             if (ServletUtil.checkUserType(request,User.TypeClient)){
                 book.setUserCode(((User)request.getSession().getAttribute(SessionAttribute.UserAttribute)).getUserCode());

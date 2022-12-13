@@ -20,12 +20,14 @@ public class CheckBookServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         if (ServletUtil.checkUserType(request, User.TypeReception)){
+            ServletUtil.setCharsetJSON(request,response);
             String s;
             if (BookDao.checkBook(Integer.parseInt(request.getParameter("Bid")))){
                 s = "入住成功";
             }else {
                 s = "入住失败";
             }
+            //System.out.println(s);
             PrintWriter writer = response.getWriter();
             writer.println(s);
         }
