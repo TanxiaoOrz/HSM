@@ -157,3 +157,21 @@ BEGIN
 end if;
 END$$
 DELIMITER ;
+
+CREATE
+ALGORITHM = UNDEFINED
+    DEFINER = `root`@`localhost`
+    SQL SECURITY DEFINER
+VIEW `type_count` AS
+SELECT
+    `type`.`Tid` AS `Tid`,
+    `type`.`TypeName` AS `TypeName`,
+    `type`.`TypePrice` AS `TypePrice`,
+    `x`.`EmptyCount` AS `EmptyCount`
+FROM
+    (`type`
+        LEFT JOIN (SELECT
+                       `room_empty`.`Tid` AS `Tid`, COUNT(0) AS `EmptyCount`
+                   FROM
+                       `room_empty`
+                   GROUP BY `room_empty`.`Tid`) `x` ON ((`x`.`Tid` = `type`.`Tid`)))
