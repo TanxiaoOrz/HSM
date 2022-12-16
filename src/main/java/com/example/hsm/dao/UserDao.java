@@ -3,10 +3,8 @@ package com.example.hsm.dao;
 import com.example.hsm.beans.User;
 import com.example.hsm.utils.DbConnection;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
 
 public class UserDao {
     public static User select(String UserCode,String UserPass,String UserType){
@@ -31,6 +29,34 @@ public class UserDao {
             connection.close();
 
             return user;
+
+        }catch (SQLException | NullPointerException exception){
+            exception.printStackTrace();
+            return null;
+        }
+    }
+
+    public static ArrayList<User> getReception(){
+        Connection connection = DbConnection.getInstance().getConnection();
+        try {
+            Statement statement = connection.createStatement();
+            //System.out.println(statement);
+            ResultSet resultSet = statement.executeQuery("SELECT * from hsm.user where UserType= 'reception'");
+            ArrayList<User> users = new ArrayList<>();
+            while (resultSet.next()) {
+                User user = new User();
+                user.setUid(resultSet.getInt("Uid"));
+                user.setUserCode(resultSet.getString("UserCode"));
+                user.setUserPass(resultSet.getString("UserPass"));
+                user.setUserType(resultSet.getString("UserType"));
+                users.add(user);
+            }
+
+            resultSet.close();
+            statement.close();
+            connection.close();
+
+            return users;
 
         }catch (SQLException | NullPointerException exception){
             exception.printStackTrace();

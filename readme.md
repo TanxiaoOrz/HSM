@@ -31,13 +31,14 @@
 >>  2. 用户注册接口
 	url: /UserRegister, 需求参数 UserCode,UserPass
 	返回注册用户的全部信息，并会放进session中  
->>  3. 新增前台账号接口  
+>>  3. 新增前台账号接口
 	url: /NewReception, 需求参数 UserCode,UserPass,执行要求：登录账号manager
 	返回登录用户的全部信息  
 >>  4. 删除前台账号接口
-url: /DeleteReception, 需求参数 UserCode执行要求：登录账号manager
+url: /DeleteReception, 需求参数 UserCode 执行要求：登录账号manager
 	返回删除成功或删除失败  
->>  5. 返回当前登录用户接口
+>>  5. 返回所有前台账户 url: /GetReception, 需求参数：无 执行要求：登录账号manager
+>>  6. 返回当前登录用户接口
 url:/GetUser,无需求参数，无返回代表无登陆
 >
 >2.第二次冲刺  
