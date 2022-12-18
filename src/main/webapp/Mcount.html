@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>上理酒店经理系统</title>
+    <link rel="stylesheet" type="text/css" href="static/css/header.css">
+    <link type="text/css" rel="stylesheet" href="static/css/style.css">
+    <script src="static/script/jquery-3.6.1.js"></script>
+    <script type="text/javascript" src="static/script/jquery-1.7.2.js"></script>
+    <script>
+        $(function () {
+            $(".headerpage").load("static/html/Mheader.html");
+            $(".footerpage").load("static/html/footer.html");
+
+            let urlstaff = "http://localhost:8080/HSM_war_exploded/GetReception";
+            $.get(urlstaff, function (data) {
+
+                console.log(data)
+                let str= `<table valign="center" cellPadding="0" cellSpacing="20">
+                    <tr>
+                        <td>员工ID</td>
+                        <td>账号名</td>
+                    </tr>`;
+
+                data.forEach((item)=>{
+                    str +=`<tr>
+                        <td>${item.Uid}</td>
+                        <td>${item.UserCode}</td>
+                    </tr>`
+
+                });
+                str +=`</table>`;
+                document.getElementById("worker").innerHTML=str;
+            })
+
+
+        });
+
+        function deleR(){
+            var UserCode=document.getElementById("uid").value;
+            let urldele="http://localhost:8080/HSM_war_exploded/DeleteReception?UserCode="+UserCode;
+
+            $.post(urldele, function (data) {
+                console.log(data);
+                console.log("okle")
+                    window.location.href=location;
+
+            });
+
+
+        }
+
+
+        function addR(){
+            var UserCode=document.getElementById("username").value;
+            var UserPass=document.getElementById("password").value;
+            let urladd="http://localhost:8080/HSM_war_exploded/NewReception?UserCode="+UserCode+"&UserPass="+UserPass;
+
+            console.log(urladd);
+            $.post(urladd, function (data) {
+                if(data===null){
+                    alert("添加失败");
+                }else {
+
+                    alert("职工账号添加成功");
+                    window.location.href=location;
+                }
+
+            });
+        }
+
+
+    </script>
+</head>
+<body id="body">
+
+<div align="center" class="headerpage"></div>
+
+
+<div id="main" align="center" class="OUTSIDE1">
+
+    <table valign="center" class="L_tb" cellpadding="0" cellspacing="0">
+        <tr>
+               <td width="33%">
+                    <div class="OUTSIDE1" style="background: gray;height: 350px">
+                        <br>  <h2 align="center">酒店职员名单</h2>
+                        <div id="worker" align="center">
+
+
+                        </div>
+                        <div style="clear:both "></div>
+                    </div>
+
+                </td>
+            <td width="33%">
+                    <div class="OUTSIDE1" style="background: red;height: 350px">
+                      <br>  <h2 align="center">添加新职工</h2>
+                        <br>
+                        <br>
+                       <div> 职工账号:   <input type="text" name="username" id="username"></div>
+                        <br>
+                        <br>
+                        <div >职工密码: <input type="text" name="password" id="password"></div>
+                        <br>
+                        <div style="float: right;padding-right: 10px"><input type="button" value="添加" onclick="addR()"></div>
+                        <div style="clear:both "></div>
+                    </div>
+
+                </td>
+            <td width="33%">
+                    <div class="OUTSIDE1" style="background: green;height: 350px">
+                        <br><h2 align="center">删除职工账号</h2>
+                        <br>
+                        <br> <br><br>
+                        <div> 职工账号:   <input type="text" name="username" id="uid"></div>
+
+                        <br>
+                        <div style="float: right;padding-right: 10px"><input type="button" value="删除" onclick="deleR()"></div>
+                        <div style="clear:both "></div>
+                        <div style="clear:both "></div>
+                    </div>
+
+                </td>
+
+
+
+
+        </tr>
+    </table>
+
+    <br>
+
+
+
+</div>
+
+<div align="center" class="footerpage"></div>
+
+
+</body>
+</html>
+

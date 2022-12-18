@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>上理酒店经理系统</title>
+    <link rel="stylesheet" type="text/css" href="static/css/header.css">
+    <link type="text/css" rel="stylesheet" href="static/css/style.css">
+    <script src="static/script/jquery-3.6.1.js"></script>
+    <script type="text/javascript" src="static/script/jquery-1.7.2.js"></script>
+    <script>
+        $(function () {
+            $(".headerpage").load("static/html/Mheader.html");
+            $(".footerpage").load("static/html/footer.html");
+
+            function getUrlVars() {
+                var vars = [],
+                    hash;
+                var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+                for (var i = 0; i < hashes.length; i++) {
+                    hash = hashes[i].split('=');
+                    vars.push(hash[0]);
+                    vars[hash[0]] = hash[1];
+                }
+                return vars;
+            }
+
+            var Rid = getUrlVars()["Rid"];
+
+            let urlroom ="http://localhost:8080/HSM_war_exploded/GetRoomServlet?Rid="+Rid;
+            $.get(urlroom, function (data) {
+
+                let str = `<table align="center" border="0" valign="center" style="text-align: center" cellSpacing="0"
+                                cellPadding="15">`;
+                str += `  <tr>
+                        <td>房间ID</td>
+                        <td> <div  id="Rid" contenteditable="true">${data.Rid}</div></td>
+                    </tr>
+                    <tr>
+                        <td>所在楼层</td>
+                        <td> <div id="Floor" contenteditable="true">${data.Floor}</div></td>
+                    </tr>
+                    <tr>
+                        <td>特征描述</td>
+                        <td><div id="Feature" contenteditable="true">${data.Feature}</div></td>
+                    </tr>
+                    <tr>
+                        <td>房间朝向</td>
+                        <td><div id="Orientation" contenteditable="true">${data.Orientation}</div></td>
+                    </tr>
+                    <tr>
+                        <td>房型ID</td>
+                        <td><div id="Tid" contenteditable="false">${data.type.Tid}</div></td>
+                    </tr>
+                    <tr>
+                        <td>房型名称</td>
+                        <td><div id="TypeName" contenteditable="false">${data.type.TypeName}</div></td>
+                    </tr>
+                    <tr>
+                        <td>房型价格</td>
+                        <td><div id="TypePrice" contenteditable="false" >${data.type.TypePrice}</div></td>
+                    </tr>
+                    <tr>
+
+                        <td align="center" valign="center" colspan="2">
+                            <input id="book_modify" type="button" value="修改信息" onclick="modify()">
+                        </td>
+                    </tr>`;
+                str += `</table><div style="clear:both "></div>`;
+                document.getElementById("itemss").innerHTML = str;
+                return false;
+            })
+
+        });
+
+    </script>
+
+
+    <script>
+
+
+        /*修改房型*/
+        function modify(){
+            var Rid=document.getElementById("Rid").innerHTML;
+            var Floor=document.getElementById("Floor").innerHTML;
+            var Feature=document.getElementById("Feature").innerHTML;
+            var Orientation=document.getElementById("Orientation").innerHTML;
+            let urlmodify = "http://localhost:8080/HSM_war_exploded/ModifyRoom ?Rid="+Rid+"&Floor="+Floor+"&Feature="+Feature+"&Orientation="+Orientation;
+            $.post(urlmodify, function (data) {
+                console.log(data)
+            })
+
+        }
+
+
+    </script>
+</head>
+<body id="body">
+
+<div align="center" class="headerpage"></div>
+
+
+<div id="main" class="OUTSIDE1">
+    <div align="center"><h2>房间详细信息修改：</h2></div>
+    <div align="center" id="itemss" >
+
+
+    </div>
+</div>
+
+<div align="center" class="footerpage"></div>
+
+
+</body>
+</html>
+

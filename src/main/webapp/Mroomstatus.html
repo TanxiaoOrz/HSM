@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>上理酒店经理系统</title>
+    <link rel="stylesheet" type="text/css" href="static/css/header.css">
+    <link type="text/css" rel="stylesheet" href="static/css/style.css">
+    <script src="static/script/jquery-3.6.1.js"></script>
+    <script type="text/javascript" src="static/script/jquery-1.7.2.js"></script>
+    <script>
+        $(function () {
+            $(".headerpage").load("static/html/Mheader.html");
+            $(".footerpage").load("static/html/footer.html");
+
+            let urltype = "http://localhost:8080/HSM_war_exploded/GetType"
+            let urlstatus="http://localhost:8080/HSM_war_exploded/GetRoom"
+
+            $.get(urltype, function (data) {
+
+                    let str = `<table align="center" border="0" valign="center" style="text-align: center" cellspacing="0"
+                       cellpadding="30">
+                    <tr>
+                        <th>房号</th>
+                        <th>类型</th>
+                        <th>价格</th>
+                        <th>余量</th>
+                    </tr>`;
+                    data.forEach((item) => {
+                        str += `<tr>
+                        <td>${item.Tid}</td>
+                        <td> ${item.TypeName}</td>
+                        <td>${item.TypePrice}</td>
+                        <td>${item.EmptyRoom}</td>
+                    </tr>`;
+
+                    });
+                    str += `</table><div style="clear:both "></div>`;
+                    document.getElementById("info").innerHTML = str;
+                    return false;
+
+
+            });
+
+            $.get(urlstatus, function (data) {
+
+                let str = `<table align="center" border="0" valign="center" style="text-align: center" cellspacing="0"
+                       cellpadding="30">
+                    <tr>
+                        <th>今日总空房</th>
+                        <th>今日已预定</th>
+
+                    </tr>`;
+                    str += `<tr>
+                        <td>${data.EmptyCount}</td>
+                        <td> ${data.OrderedCount}</td>
+                    </tr>`;
+
+                ;
+                str += `</table><div style="clear:both "></div>`;
+                document.getElementById("address").innerHTML = str;
+                return false;
+
+
+            });
+
+
+        });
+
+
+    </script>
+</head>
+<body id="body">
+
+<div align="center" class="headerpage"></div>
+
+
+<div id="main" align="center">
+
+    <table class="content_tb" cellpadding="30" cellspacing="0">
+        <tr style="height: 400px">
+
+
+            <td valign="top" align="center" width="50%" class="OUTSIDE1">
+                <br>
+                <h1>房型具体信息</h1>
+                <div id="info">
+
+                </div>
+            </td>
+
+
+            <td align="center" valign="top" width="50%" class="OUTSIDE1">
+                <br>
+                <h1>今日房态</h1>
+                <br>
+                <div style="overflow: auto;height: 400px" id="address">
+                </div>
+
+            </td>
+
+        </tr>
+
+    </table>
+
+
+</div>
+
+
+<div class="footerpage"></div>
+
+
+</body>
+</html>
+

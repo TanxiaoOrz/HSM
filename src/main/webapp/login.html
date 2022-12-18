@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>上理酒店管理系统</title>
+    <link type="text/css" rel="stylesheet" href="static/css/style.css">
+    <script type="text/javascript" src="static/script/jquery-1.7.2.js"></script>
+    <script type="text/javascript">
+        $(function () {
+
+            $("#sub_btn").click(function () {
+                let usernameValue = $("#username").val();
+                let passwordValue = $("#password").val();
+
+                if (usernameValue === "" || passwordValue === "") {
+                    alert("用户名或密码不能为空");
+                    return false;
+                }
+                let id = document.getElementsByName("ID");
+                for (let i = 0; i < id.length; i++) {
+                    if (id[i].checked)
+                        var identify = id[i].value;
+                }
+
+
+                let url = "http://localhost:8080/HSM_war_exploded/UserLogin?UserCode=" + usernameValue + "&UserPass=" + passwordValue + "&UserType=" + identify;
+
+                $.post(url, function (data) {
+                     if(data===null){
+                         alter("账号错误，请检查");
+                     }
+                     else if(data.UserType==="manager") window.location.href="Mhome.html";
+                     else if(data.UserType==="reception") window.location.href="Rhome.html";
+                     else if(data.UserType==="client") window.location.href="Chome.html";
+                     else {alter("账号错误，请重试");
+                     window.location.href=location;}
+                });
+
+
+            });
+
+        });
+
+    </script>
+</head>
+<body>
+<div id="header">
+    <img class="logo_img" alt="" src="static/img/usst1.jpg">
+    <span class="wel_word">酒店管理系统</span>
+</div>
+
+<div class="login_banner">
+
+    <div id="l_content">
+        <span class="login_word">欢迎使用</span>
+    </div>
+    <div id="content">
+        <div class="login_form">
+            <div class="login_box">
+                <div class="tit">
+                    <h1>上理酒店会员</h1>
+                    <a href="regist.html">立即注册</a>
+                </div>
+                <div class="msg_cont">
+                    <b></b>
+                    <span class="errorMsg">请选择身份，并输入用户名和密码</span>
+                </div>
+                <div class="form">
+                    <table align="center">
+                        <tr>
+                            <td width="50%">
+                                身份：
+                            </td>
+                            <td width="50%">
+                                <input type="radio" name="ID" value="manager" checked="checked"/>经理
+                                <input type="radio" name="ID" value="reception"/>前台
+                                <input type="radio" name="ID" value="client"/>客户
+                            </td>
+                        </tr>
+                    </table>
+                    <br/>
+                    <label>用户账号：</label>
+                    <input class="itxt" type="text" placeholder="请输入用户账号" autocomplete="off"
+                           tabindex="1" name="username" id="username"/>
+                    <br/>
+                    <br/>
+                    <label>用户密码：</label>
+                    <input class="itxt" type="password" placeholder="请输入密码" autocomplete="off"
+                           tabindex="1" name="password" id="password"
+                    />
+                    <br/>
+                    <br/>
+                    <input type="button" value="登录" id="sub_btn"/>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+<div id="bottom">
+			<span>
+				上理酒店管理系统.Copyright &copy;2022
+			</span>
+</div>
+</body>
+</html>

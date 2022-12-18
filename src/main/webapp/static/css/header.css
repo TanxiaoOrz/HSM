@@ -1,0 +1,67 @@
+.header {
+    width: 1200px;
+    background: #39987c;
+    height:fit-content;
+    border: 2px black solid;
+    border-radius: 10px;
+    padding: 15px;
+}
+
+#bt_search{
+
+    background: green;
+    color: #fff;
+}
+
+.header_title {
+    width: 1200px;
+}
+
+.header ul {
+    list-style: none;
+    font-size: 14px;
+    color: #fff;
+}
+
+.header ul li {
+    float: left;
+    width: 90px;
+    text-align: center;
+    border-radius: 5px;
+    background: green;
+    height: fit-content;
+    margin: 5px;
+    border: 2px black solid;
+    padding: 2px 4px;
+}
+
+#log {
+    float: right;
+    width: 180px;
+    text-align: center;
+    border-radius: 5px;
+    background: green;
+    height: fit-content;
+    margin: 5px;
+    color: #fff;
+    border: 2px black solid;
+    padding: 2px 4px;
+    list-style: none;
+}
+
+.header a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.header ul li a:hover {
+    text-decoration: underline;
+    color: #fba;
+}
+
+.header h1{
+    text-align: center;
+    margin: 25px 200px;
+    font-size: 20px;
+    color: darkgreen;
+}

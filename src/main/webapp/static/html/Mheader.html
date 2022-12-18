@@ -1,0 +1,60 @@
+<div class="header">
+
+    <table align="center">
+        <tr>
+            <td width="90%" >
+                <h1><b>管理员系统</b></h1>
+                <ul>
+                    <li><a href="http://localhost:8080/HSM_war_exploded/Mhome.html">主页</a></li>
+                    <li><a href="http://localhost:8080/Mhome.html">客房详情</a></li>
+                    <li><a href="http://localhost:8080/HSM_war_exploded/Mroomstatus.html">今日房态</a></li>
+                    <li><a href="http://localhost:8080/HSM_war_exploded/Mtype_modify.html">修改房型</a></li>
+                    <li><a href="http://localhost:8080/HSM_war_exploded/login.html">退出登录</a></li>
+                    <li><a href="http://localhost:8080/HSM_war_exploded/Mcount.html">账号管理</a></li>
+                </ul>
+            </td>
+            <div style="clear:both "></div>
+
+            <td width="10%">
+
+                <table>
+                    <tr height="70px">
+                        <td width="80%">
+                            <input type="text"  placeholder="请输入房间号"  name="tv_search" id="tv_search">
+                        </td>
+
+                        <td width="20%">
+
+                            <input type="button" name="bt_search" id="bt_search" value="搜索">
+                        </td>
+                    </tr>
+
+
+                    <tr >
+                        <td colspan="2">
+                            <li id="log">当前用户：未登录</li>
+                        </td>
+                        <script>
+                            let urlGetUserName ="http://localhost:8080/HSM_war_exploded/GetUser";
+                            $.get(urlGetUserName,function (data){
+                                console.log(data)
+                                document.getElementById("log").innerText="当前用户："+data.UserCode;
+                            })
+
+                            document.getElementById("bt_search").onclick=function () {
+                                let bookname= $("#tv_search").val();
+                                let urlGoSerach = "http://localhost:8080/search?str="+bookname;
+                                let win=window.open(urlGoSerach);
+                                win.focus();
+                            }
+
+                        </script>
+                    </tr>
+                </table>
+
+                <div style="clear:both "></div>
+            </td>
+        </tr>
+    </table>
+    <div style="clear:both "></div>
+</div>

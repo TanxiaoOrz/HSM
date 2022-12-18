@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>上理酒店经理系统</title>
+    <link rel="stylesheet" type="text/css" href="static/css/header.css">
+    <link type="text/css" rel="stylesheet" href="static/css/style.css">
+    <script src="static/script/jquery-3.6.1.js"></script>
+    <script type="text/javascript" src="static/script/jquery-1.7.2.js"></script>
+    <script>
+        $(function () {
+            $(".headerpage").load("static/html/Mheader.html");
+            $(".footerpage").load("static/html/footer.html");
+
+            let urlstaff = "http://localhost:8080/HSM_war_exploded/GetType";
+            $.get(urlstaff, function (data) {
+
+                let str = `<table align="center" border="0" valign="center" style="text-align: center" cellspacing="0"
+                       cellpadding="30">
+                    <tr>
+                        <th>房型ID</th>
+                        <th>房型名称</th>
+                        <th>房型价格</th>
+                        <th>修改</th>
+
+                    </tr>`;
+                data.forEach((item)=>{
+                    str +=`<tr>
+                        <td>${item.Tid}</td>
+                        <td>${item.TypeName}</td>
+                        <td ><div id="${item.Tid}" contenteditable="true" >${item.TypePrice}</div></td>
+                        <td><input type="button" value="修改价格" onclick="modify(${item.Tid},'${item.TypeName}')"></td>
+                    </tr>`
+
+                })
+                str += `</table><div style="clear:both "></div>`;
+                document.getElementById("itemss").innerHTML = str;
+                return false;
+            })
+
+
+        });
+
+    </script>
+
+
+    <script>
+
+
+        /*修改房型*/
+        function modify(Tid,Tname){
+            var price=document.getElementById(Tid).innerHTML;
+            let urlmodify = "http://localhost:8080/HSM_war_exploded/ModifyType?Tid="+Tid+"&TypeName="+Tname+"&TypePrice="+price;
+            $.post(urlmodify, function (data) {
+                console.log(data)
+            })
+
+        }
+
+
+    </script>
+</head>
+<body id="body">
+
+<div align="center" class="headerpage"></div>
+
+
+<div id="main" class="OUTSIDE1">
+    <div align="center"><h2>房型信息修改：</h2></div>
+    <div align="center" id="itemss" >
+
+
+    </div>
+</div>
+
+<div align="center" class="footerpage"></div>
+
+
+</body>
+</html>
+

@@ -24,7 +24,9 @@ public class DeleteReceptionServlet extends HttpServlet {
             ServletUtil.setCharsetJSON(request, response);
             PrintWriter writer = response.getWriter();
             if (UserDao.delete(request.getParameter("UserCode"),User.TypeReception)){
-                writer.print("删除成功");
+               String str="删除成功";
+                String s = new GsonBuilder().create().toJson(str);
+           writer.println(s);
             }else {
                 writer.print("删除失败");
             }
