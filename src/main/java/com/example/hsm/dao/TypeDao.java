@@ -72,12 +72,12 @@ public class TypeDao {
             statement.setString(2,type.getTypePrice());
             statement.setInt(3,type.getTid());
 
-            statement.execute();
+            int result = statement.executeUpdate();
 
             statement.close();
             connection.close();
 
-            return true;
+            return result==1;
         }catch (SQLException | NullPointerException exception){
             exception.printStackTrace();
             return false;

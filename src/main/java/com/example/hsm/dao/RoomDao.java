@@ -120,12 +120,12 @@ public class RoomDao {
             statement.setInt(4,room.getType().getTid());
             statement.setInt(5,room.getRid());
             //System.out.println(statement);
-            statement.execute();
+            int result = statement.executeUpdate();
 
             statement.close();
             connection.close();
 
-            return true;
+            return result==1;
         }catch (SQLException | NullPointerException exception){
             exception.printStackTrace();
             return false;

@@ -56,11 +56,11 @@ public class BookDao {
             statement.setDate(4,book.getEndTime());
             //System.out.println(statement);
 
-            statement.execute();
+            int result = statement.executeUpdate();
             statement.close();
             connection.close();
 
-            return true;
+            return result==1;
         }catch (SQLException | NullPointerException exception){
             exception.printStackTrace();
             return false;
@@ -112,8 +112,10 @@ public class BookDao {
             PreparedStatement statement = connection.prepareStatement("UPDATE hsm.book set Checked = 'yes' where Bid = ?");
             statement.setInt(1,Bid);
             System.out.println(statement);
-
-            return true;
+            int result = statement.executeUpdate();
+            statement.close();
+            connection.close();
+            return result==1;
 
         }catch (SQLException | NullPointerException exception){
             exception.printStackTrace();
@@ -127,8 +129,10 @@ public class BookDao {
             PreparedStatement statement = connection.prepareStatement("UPDATE hsm.book set EndTime = ? where Bid = ?");
             statement.setDate(1,EndTime);
             statement.setInt(2,Bid);
-            statement.execute();
-            return true;
+            int result = statement.executeUpdate();
+            statement.close();
+            connection.close();
+            return result==1;
 
         }catch (SQLException | NullPointerException exception){
             exception.printStackTrace();
@@ -141,8 +145,10 @@ public class BookDao {
         try {
             PreparedStatement statement = connection.prepareStatement("UPDATE hsm.book set Paid = 'yes' where Bid = ?");
             statement.setInt(1,Bid);
-            statement.execute();
-            return true;
+            int result = statement.executeUpdate();
+            statement.close();
+            connection.close();
+            return result==1;
 
         }catch (SQLException | NullPointerException exception){
             exception.printStackTrace();

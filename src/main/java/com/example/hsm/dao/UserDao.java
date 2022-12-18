@@ -94,12 +94,12 @@ public class UserDao {
             statement.setString(1, UserCode);
             statement.setString(2, UserType);
 
-            statement.execute();
+            int result = statement.executeUpdate();
 
             statement.close();
             connection.close();
 
-            return true;
+            return result==1;
 
         }catch (SQLException | NullPointerException exception){
             exception.printStackTrace();
