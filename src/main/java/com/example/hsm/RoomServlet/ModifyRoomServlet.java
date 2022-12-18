@@ -6,6 +6,7 @@ import com.example.hsm.beans.User;
 import com.example.hsm.dao.RoomDao;
 import com.example.hsm.dao.TypeDao;
 import com.example.hsm.utils.ServletUtil;
+import com.google.gson.GsonBuilder;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -57,13 +58,13 @@ public class ModifyRoomServlet extends HttpServlet {
             room.setFloor(request.getParameter("Floor"));
             room.setRid(Integer.parseInt(request.getParameter("Rid")));
 
-            String s;
+            String str;
             if (RoomDao.modifyRoom(room)) {
-                s = "修改成功";
+                str = "修改成功";
             } else {
-                s = "修改失败";
+                str = "修改失败";
             }
-
+            String s = new GsonBuilder().create().toJson(str);
             PrintWriter writer = response.getWriter();
             writer.print(s);
         }

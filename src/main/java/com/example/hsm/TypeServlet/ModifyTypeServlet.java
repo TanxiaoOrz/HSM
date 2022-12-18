@@ -4,6 +4,7 @@ import com.example.hsm.beans.Type;
 import com.example.hsm.beans.User;
 import com.example.hsm.dao.TypeDao;
 import com.example.hsm.utils.ServletUtil;
+import com.google.gson.GsonBuilder;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -27,13 +28,13 @@ public class ModifyTypeServlet extends HttpServlet {
             type.setTypePrice(request.getParameter("TypePrice"));
             type.setTid(Integer.parseInt(request.getParameter("Tid")));
 
-            String s;
+            String str;
             if (TypeDao.modifyType(type)) {
-                s = "修改成功";
+                str = "修改成功";
             } else {
-                s = "修改失败";
+                str = "修改失败";
             }
-
+            String s = new GsonBuilder().create().toJson(str);
             PrintWriter writer = response.getWriter();
             writer.print(s);
         }
