@@ -72,4 +72,13 @@ url:/GetUser,无需求参数，无返回代表无登陆
 url:/DelayBook 需求参数Bid, EndTime 执行要求：登录账号reception  
 5.前台完成结账接口
 	url:/PayBook 需求参数Bid 执行要求：登录账号reception
-
+> 
+>4.第四次冲刺
+>>1.通过Uid返回用户的所有入住人信息
+url:/GetCheckPeopleByUid 需求参数：Uid(非client登录时) 执行要求：登录账号 如果Uid=0代表搜索的是client创建的特殊入住人员  
+2.通过Bid返回该订单的所有入住人信息
+url:/GetCheckPeopleByBid需求参数：Bid 执行要求：前台登录     
+3.新建CheckPeople
+url:/NewCheckPeople 需求参数：CheckName，CheckCode,CheckPhone,执行要求，登录用户,用户创建的会自动归属在用户下
+4.将CheckPeople链接到订单中
+url:/AddCheckPeopleToBook 需求参数：Cid，Bid 执行要求：登录账户

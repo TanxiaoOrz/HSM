@@ -27,7 +27,7 @@ CREATE TABLE `hsm`.`room` (
                                       ON UPDATE NO ACTION);
 
 CREATE TABLE `hsm`.`book` (
-                              `Bid` INT NOT NULL,
+                              `Bid` INT NOT NULL ,
                               `Rid` INT NOT NULL,
                               `Uid` INT NOT NULL,
                               `StartTime` DATE NOT NULL,
@@ -175,3 +175,59 @@ FROM
                    FROM
                        `room_empty`
                    GROUP BY `room_empty`.`Tid`) `x` ON ((`x`.`Tid` = `type`.`Tid`)))
+
+CREATE TABLE `hsm`.`check_people` (
+                                      `Cid` INT NOT NULL AUTO_INCREMENT,
+                                      `Uid` INT NULL,
+                                      `CheckName` VARCHAR(45) NULL,
+                                      `CheckCode` VARCHAR(45) NULL,
+                                      `CheckPhone` VARCHAR(45) NULL,
+                                      PRIMARY KEY (`Cid`),
+                                      INDEX `Uid_idx` (`Uid` ASC) VISIBLE,
+                                      CONSTRAINT `Uid`
+                                          FOREIGN KEY (`Uid`)
+                                              REFERENCES `hsm`.`user` (`Uid`)
+                                              ON DELETE NO ACTION
+                                              ON UPDATE NO ACTION);
+
+CREATE TABLE `hsm`.`bc_relation` (
+                                     `Bid` INT NOT NULL,
+                                     `Cid` INT NOT NULL,
+                                     PRIMARY KEY (`Bid`, `Cid`),
+                                     INDEX `Cid_idx` (`Cid` ASC) VISIBLE,
+                                     CONSTRAINT `Bid`
+                                         FOREIGN KEY (`Bid`)
+                                             REFERENCES `hsm`.`book` (`Bid`)
+                                             ON DELETE NO ACTION
+                                             ON UPDATE NO ACTION,
+                                     CONSTRAINT `Cid`
+                                         FOREIGN KEY (`Cid`)
+                                             REFERENCES `hsm`.`check_people` (`Cid`)
+                                             ON DELETE NO ACTION
+                                             ON UPDATE NO ACTION);
+
+CREATE
+ALGORITHM = UNDEFINED
+    DEFINER = `root`@`localhost`
+    SQL SECURITY DEFINER
+VIEW `bc_relation_check` AS
+SELECT
+    `bc_relation`.`Bid` AS `Bid`,
+    `check_people`.`Cid` AS `Cid`,
+    `check_people`.`CheckName` AS `CheckName`,
+    `check_people`.`CheckPhone` AS `CheckPhone`,
+    `check_people`.`CheckCode` AS `CheckCode`
+FROM
+    (`check_people`
+        JOIN `bc_relation`)
+WHERE
+    (`check_people`.`Cid` = `bc_relation`.`Cid`)
+
+ALTER TABLE `hsm`.`check_people`
+DROP FOREIGN KEY `Uid`;
+ALTER TABLE `hsm`.`check_people`
+    CHANGE COLUMN `Uid` `Uid` INT NULL ;
+ALTER TABLE `hsm`.`check_people`
+    ADD CONSTRAINT `Uid`
+        FOREIGN KEY (`Uid`)
+            REFERENCES `hsm`.`user` (`Uid`);

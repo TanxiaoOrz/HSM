@@ -39,3 +39,13 @@ INSERT INTO `hsm`.`room` (`Floor`, `Feature`, `Orientation`, `Tid`) VALUES ('300
 INSERT INTO `hsm`.`room` (`Floor`, `Feature`, `Orientation`, `Tid`) VALUES ('3009', '大家庭也能容纳，中高楼层风景秀丽', '南', '5');
 
 INSERT INTO `hsm`.`book` (`Rid`, `UserCode`, `StartTime`, `EndTime`, `Price`) VALUES ('1', '3', '2022-12-12', '2022-12-20', '800');
+
+INSERT INTO `hsm`.`check_people` (`Uid`, `CheckName`, `CheckCode`, `CheckPhone`) VALUES ('1', '入住用户1', '1', '123');
+INSERT INTO `hsm`.`check_people` (`Uid`, `CheckName`, `CheckCode`, `CheckPhone`) VALUES ('2', '入住用户2', '2', '123');
+INSERT INTO `hsm`.`check_people` (`Uid`, `CheckName`, `CheckCode`, `CheckPhone`) VALUES ('1', '入住用户3', '1', '123');
+
+UPDATE `hsm`.`check_people` SET `Uid` = '3' WHERE (`Cid` = '1');
+UPDATE `hsm`.`check_people` SET `Uid` = '4' WHERE (`Cid` = '2');
+UPDATE `hsm`.`check_people` SET `Uid` = '3' WHERE (`Cid` = '3');
+INSERT INTO `hsm`.`check_people` ( `CheckName`, `CheckCode`, `CheckPhone`) VALUES ( '入住用户4', '6', '123');
+
