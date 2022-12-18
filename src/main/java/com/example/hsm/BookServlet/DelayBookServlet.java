@@ -3,6 +3,7 @@ package com.example.hsm.BookServlet;
 import com.example.hsm.beans.User;
 import com.example.hsm.dao.BookDao;
 import com.example.hsm.utils.ServletUtil;
+import com.google.gson.GsonBuilder;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -22,12 +23,13 @@ public class DelayBookServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         if (ServletUtil.checkUserType(request, User.TypeReception)){
             ServletUtil.setCharsetJSON(request,response);
-            String s;
+            String str;
             if (BookDao.delayBook(Integer.parseInt(request.getParameter("Bid")), Date.valueOf(request.getParameter("EndTime") ))){
-                s = "延长成功";
+                str = "延长成功";
             }else {
-                s = "延长失败";
+                str = "延长失败";
             }
+            String s = new GsonBuilder().create().toJson(str);
             PrintWriter writer = response.getWriter();
             writer.println(s);
         }

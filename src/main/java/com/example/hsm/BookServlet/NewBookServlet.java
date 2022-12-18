@@ -5,6 +5,7 @@ import com.example.hsm.beans.User;
 import com.example.hsm.dao.BookDao;
 import com.example.hsm.utils.ServletUtil;
 import com.example.hsm.utils.SessionAttribute;
+import com.google.gson.GsonBuilder;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -35,12 +36,13 @@ public class NewBookServlet extends HttpServlet {
             }else {
                 book.setUserCode(request.getParameter("UserCode"));
             }
-            String s;
+            String str;
             if (BookDao.newBook(book)){
-                s ="新建成功";
+                str ="新建成功";
             }else{
-                s ="新建失败";
+                str ="新建失败";
             }
+            String s = new GsonBuilder().create().toJson(str);
             PrintWriter writer = response.getWriter();
             writer.println(s);
         }

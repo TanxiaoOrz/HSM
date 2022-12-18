@@ -3,6 +3,7 @@ package com.example.hsm.BookServlet;
 import com.example.hsm.beans.User;
 import com.example.hsm.dao.BookDao;
 import com.example.hsm.utils.ServletUtil;
+import com.google.gson.GsonBuilder;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -22,12 +23,13 @@ public class PayBookServlet extends HttpServlet {
         if (ServletUtil.checkUserType(request, User.TypeReception)){
             ServletUtil.setCharsetJSON(request,response);
 
-            String s;
+            String str;
             if (BookDao.payBook(Integer.parseInt(request.getParameter("Bid")))){
-                s = "付款成功";
+                str = "付款成功";
             }else {
-                s = "付款失败";
+                str = "付款失败";
             }
+            String s = new GsonBuilder().create().toJson(str);
             PrintWriter writer = response.getWriter();
             writer.println(s);
         }
