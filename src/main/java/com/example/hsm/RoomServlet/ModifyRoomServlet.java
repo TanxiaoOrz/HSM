@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 
-@WebServlet(name = "ModifyRoomServlet", value = "/ModifyRoomServlet")
+@WebServlet(name = "ModifyRoomServlet", value = "/ModifyRoom")
 public class ModifyRoomServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
