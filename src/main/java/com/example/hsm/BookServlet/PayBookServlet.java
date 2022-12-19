@@ -20,7 +20,7 @@ public class PayBookServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if (ServletUtil.checkUserType(request, User.TypeReception)){
+        if (ServletUtil.checkUserType(request, User.TypeReception)||ServletUtil.checkUserType(request, User.TypeManager)){
             ServletUtil.setCharsetJSON(request,response);
 
             String str;
