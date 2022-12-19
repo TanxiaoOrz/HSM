@@ -52,13 +52,85 @@ public class RoomDao {
 
                 Room room =new Room();
                 room.setRid(set.getInt("Rid"));
-                room.setFloor(set.getString("Floor"));
                 room.setFeature(set.getString("Feature"));
+                room.setFloor(set.getString("Floor"));
                 room.setOrientation(set.getString("Orientation"));
 
                 Type type = new Type();
                 type.setTid(set.getInt("Tid"));
+                type.setTypePrice(set.getString("TypePrice"));
                 type.setTypeName(set.getString("TypeName"));
+
+                room.setType(type);
+
+                rooms.add(room);
+            }
+
+            return rooms;
+
+
+        }catch (SQLException | NullPointerException exception){
+            exception.printStackTrace();
+            return null;
+        }
+    }
+
+    public static ArrayList<Room> getRoomByTid(Integer Tid){
+        Connection connection = DbConnection.getInstance().getConnection();
+        try {
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM hsm.room_type where Tid = ?");
+            statement.setInt(1,Tid);
+
+            ResultSet set = statement.executeQuery();
+
+            ArrayList<Room> rooms = new ArrayList<>();
+            while (set.next()){
+
+                Room room =new Room();
+                room.setFloor(set.getString("Floor"));
+                room.setRid(set.getInt("Rid"));
+                room.setFeature(set.getString("Feature"));
+                room.setOrientation(set.getString("Orientation"));
+
+                Type type = new Type();
+                type.setTypeName(set.getString("TypeName"));
+                type.setTid(set.getInt("Tid"));
+                type.setTypePrice(set.getString("TypePrice"));
+
+                room.setType(type);
+
+                rooms.add(room);
+            }
+
+            return rooms;
+
+
+        }catch (SQLException | NullPointerException exception){
+            exception.printStackTrace();
+            return null;
+        }
+    }
+
+    public static ArrayList<Room> getRoomEmptyByTid(Integer Tid){
+        Connection connection = DbConnection.getInstance().getConnection();
+        try {
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM hsm.room_empty where Tid = ?");
+            statement.setInt(1,Tid);
+
+            ResultSet set = statement.executeQuery();
+
+            ArrayList<Room> rooms = new ArrayList<>();
+            while (set.next()){
+
+                Room room =new Room();
+                room.setOrientation(set.getString("Orientation"));
+                room.setFloor(set.getString("Floor"));
+                room.setRid(set.getInt("Rid"));
+                room.setFeature(set.getString("Feature"));
+
+                Type type = new Type();
+                type.setTypeName(set.getString("TypeName"));
+                type.setTid(set.getInt("Tid"));
                 type.setTypePrice(set.getString("TypePrice"));
 
                 room.setType(type);
@@ -86,15 +158,15 @@ public class RoomDao {
             while (set.next()){
 
                 Room room =new Room();
+                room.setFeature(set.getString("Feature"));
                 room.setRid(set.getInt("Rid"));
                 room.setFloor(set.getString("Floor"));
-                room.setFeature(set.getString("Feature"));
                 room.setOrientation(set.getString("Orientation"));
 
                 Type type = new Type();
+                type.setTypePrice(set.getString("TypePrice"));
                 type.setTid(set.getInt("Tid"));
                 type.setTypeName(set.getString("TypeName"));
-                type.setTypePrice(set.getString("TypePrice"));
 
                 room.setType(type);
 
