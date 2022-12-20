@@ -8,130 +8,147 @@
     <script src="static/script/jquery-3.6.1.js"></script>
     <script type="text/javascript" src="static/script/jquery-1.7.2.js"></script>
     <script>
+        $(function () {
+            $(".headerpage").load("static/html/Mheader.html");
+            $(".footerpage").load("static/html/footer.html");
 
-        function getQueryString(name) {
+            function getQueryString(name) {
 
-            let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
-            let r = window.location.search.substr(1).match(reg);
-            if (r != null) return unescape(r[2]); return null;
-        }
+                let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+                let r = window.location.search.substr(1).match(reg);
+                if (r != null) return unescape(r[2]); return null;
+            }
+            let urlbook = "http://localhost:8080/HSM_war_exploded/Msearch.html?page=";
+            let page=1;
+            let typeJson
+            function getSearchBooks(){
+                $.get(urlbook+page, function (data) {
+                    let str = '<div align="center"><p><b>筛选条件：';
+                    let type =getQueryString("type");
+                    let s =getQueryString("str")
+                    if (type!=null){
+                        str+=` 类型:`
+                        typeJson.forEach((item) => {
+                            if (item.Tid.toString()===type){
+                                str+=item.Tname;
+                            }
+                        })
+                    }
+                    if (s!=null){
+                        str+=` 搜索书名关键字：`;
+                        str+=s;
+                    }
+                    if (s==null&&type==null){
+                        str+=`无`;
+                    }
+                    str+=`</b></p></div>`
 
-        let urlbook = "http://localhost:8080/BSM/Book/search?page=";
-        let page=1;
-        let urltype = "http://localhost:8080/BSM/Type/getALl"
-        let typeJson
-        function getSearchBooks(){
-            $.get(urlbook+page, function (data) {
-                let str = '<div align="center"><p><b>筛选条件：';
-                let type =getQueryString("type");
-                let s =getQueryString("str")
-                if (type!=null){
-                    str+=` 类型:`
-                    typeJson.forEach((item) => {
-                        if (item.Tid.toString()===type){
-                            str+=item.Tname;
-                        }
-                    })
-                }
-                if (s!=null){
-                    str+=` 搜索书名关键字：`;
-                    str+=s;
-                }
-                if (s==null&&type==null){
-                    str+=`无`;
-                }
-                str+=`</b></p></div>`
-                let bookJson = JSON.parse(data);
-                if (bookJson.length===0) {
-                    document.getElementById("messageBoard").innerHTML=" <p>开卷有益！</p>";
-                    document.getElementById("book").innerHTML="<p>书库正在积极备货中！2s后返回主页面</p>";
+                    if (data.length===0) {
+                        document.getElementById("book").innerHTML="<p>书库正在积极备货中！2s后返回主页面</p>";
 
                         page= document.getElementById("page").innerHTML;
-                    alert("没有更多书籍!");
-                    window.location.href = "http://localhost:8080";
-                    return false;
-                } else {
+                        alert("没有更多书籍!");
+                        return false;
+                    } else {
 
-                    bookJson.forEach((item) => {
-                        str+=`<div class="b_list">
-                                <div class="img_div">
-                                    <img class="book_img" alt="" src="img/book/${item.Bid}.jpg"/>
-                                </div>
+                        data.forEach((item) => {
+                            str+=`<div class="b_list">
                                 <div class="book_info">
-                                    <div class="book_left">
-                                        <span class="sp1" name="book1_name"> 书名:</span>
-                                        <span class="sp2"> ${item.Bname}</span>
-                                    </div>
-                                    <div class="book_left">
-                                        <span class="sp1"> 作者:</span>
-                                        <span class="sp2"> ${item.Bauthor}</span>
-                                    </div>
-                                    <div class="book_left">
-                                        <span class="sp1"> 价格:</span>
-                                        <span class="sp2"> ${item.Bprice}</span>
-                                    </div>
-                                    <div class="book_left">
-                                        <span class="sp1"> 库存:</span>
-                                        <span class="sp2"> ${item.Bcount}</span>
-                                    </div>
-                                    <div class="book_right" >
-                                        <p align="right" width="120px"><a text-align="right" href="http://localhost:8080/book.html?Bid=${item.Bid}">查看详情</a>
-                                    </div>
+                                <div class="book_left">
+                                    <span class="sp1" name="book1_name"> 房间号:</span>
+                                    <span class="sp2"> ${item.Floor}</span>
                                 </div>
-                            </div>`;
+                                <div class="book_left">
+                                    <span class="sp1"> 朝向:</span>
+                                    <span class="sp2"> ${item.Orientation}</span>
+                                </div><br>
+                                <span class="book_left">
+                                    <span class="sp1"> 特征:</span>
+                                    <span class="sp2"> ${item.Feature}</span>
+                                </span>
+                                <div class="book_left">
+                                    <span class="sp1"> 类型:</span>
+                                    <span class="sp2"> ${item.type.TypeName}</span>
+                                </div>
+                                <div class="book_left">
+                                    <span class="sp1"> 价格:</span>
+                                    <span class="sp2"> ${item.type.TypePrice}</span>
+                                </div>
+                                <br>
+                                <div class="book_right" >
+                                    <p align="right" width="100px" style="padding-right: 10px"><a text-align="right" href="http://localhost:8080/HSM_war_exploded/Mroom_modify.html?Rid=${item.Rid}">修改信息</a>
 
+                                </div>
+                            </div>
+                        </div>`;
+
+
+                        });
+                        str+=`<div style="clear:both "></div>`;
+                        document.getElementById("book").innerHTML = str;
+                        return false;
+
+                    }
+                });
+            }
+
+            let urltype = "http://localhost:8080/HSM_war_exploded/GetType"
+            $.get(urltype, function (data) {
+
+                console.log(data);
+                let str = '';
+                getSearchBooks();
+                data.forEach((item)=>{
+                    str += `<li class="typeHref" ><a href="http://localhost:8080/HSM_war_exploded/GetTypeByTid?Tid=${item.Tid}"</a>${item.TypeName}<br></li><br>`;
+                })
+                document.getElementById("typeClass").innerHTML = str;
+                return false;
+            });
+
+
+
+            let urlall = "http://localhost:8080/HSM_war_exploded/GetRoomAll";
+
+            $.get(urlall, function (data) {
+
+                    let str = '<div align="center"><p><b>本酒店所有房间</b></p></div>';
+                    data.forEach((item) => {
+                        str+=`<div class="b_list">
+                                <div class="book_info">
+                                <div class="book_left">
+                                    <span class="sp1" name="book1_name"> 房间号:</span>
+                                    <span class="sp2"> ${item.Floor}</span>
+                                </div>
+                                <div class="book_left">
+                                    <span class="sp1"> 朝向:</span>
+                                    <span class="sp2"> ${item.Orientation}</span>
+                                </div><br>
+                                <span class="book_left">
+                                    <span class="sp1"> 特征:</span>
+                                    <span class="sp2"> ${item.Feature}</span>
+                                </span>
+                                <div class="book_left">
+                                    <span class="sp1"> 类型:</span>
+                                    <span class="sp2"> ${item.type.TypeName}</span>
+                                </div>
+                                <div class="book_left">
+                                    <span class="sp1"> 价格:</span>
+                                    <span class="sp2"> ${item.type.TypePrice}</span>
+                                </div>
+                                <br>
+                                <div class="book_right" >
+                                    <p align="right" width="100px" style="padding-right: 10px"><a text-align="right" href="http://localhost:8080/HSM_war_exploded/Mroom_modify.html?Rid=${item.Rid}">修改信息</a>
+
+                                </div>
+                            </div>
+                        </div>`;
 
                     });
                     str+=`<div style="clear:both "></div>`;
-                    if(type==null )document.getElementById("messageBoard").innerHTML=" <p>开卷有益！</p>";
                     document.getElementById("book").innerHTML = str;
                     return false;
 
-                }
             });
-        }
-
-        function lowerpage() {
-            if (page === 1) {
-                alert("已经是第一页");
-                return;
-            }
-            page = page - 1;
-            getSearchBooks();
-        }
-
-        function upperpage() {
-            page = page + 1;
-            getSearchBooks();
-        }
-
-        $(function () {
-            $(".headerpage").load("html/header.html");
-            $(".footerpage").load("html/footer.html");
-
-
-
-            $.get(urltype, function (data) {
-
-                if (data === "true") {
-                    window.location.href = "context.html";
-                    return true;
-                } else {
-                    let str = '';
-                    typeJson = JSON.parse(data);
-                    getSearchBooks();
-                    typeJson.forEach((item) => {
-                        str += `<li class="typeHref" ><a href="http://localhost:8080/search?type=${item.Tid}">${item.Tname}</a><br></li><br>`;
-
-                    });
-                    document.getElementById("typeClass").innerHTML = str;
-                    return false;
-
-                }
-            });
-
-
-
 
 
         });
@@ -143,15 +160,15 @@
 </head>
 <body id="body">
 
-<div class="headerpage"></div>
+<div align="center" class="headerpage"></div>
 
 
-<div id="main">
+<div id="main" align="center" class="OUTSIDE">
 
-    <table class="L_tb">
+    <table valign="center" class="L_tb">
         <tr>
 
-            <td valign="top" width="10%">
+            <td valign="top" width="15%">
                 <div class="OUTSIDE"> <br>
                     <p><b>按标签分类搜索</b></p>
                     <br>
@@ -164,25 +181,22 @@
             </td>
 
 
-            <td width="90%">
-                <div class="OUTSIDE">
-                    <div id="book">
-                    </div>
-                    <div style="clear:both "></div>
-                </div>
+               <td width="85%">
+                    <div class="OUTSIDE">
+                        <div id="book">
 
-            </td>
+                        </div>
+                        <div style="clear:both "></div>
+                    </div>
+
+                </td>
+
 
         </tr>
     </table>
 
     <br>
-    <div class="B_a" id="page_nav">
-        <a href="#" onclick="lowerpage();return false;">上一页</a>
-        <a id="page" href="#" onclick="return false;">1</a>
-        <a href="#" onclick="upperpage();return false;">下一页</a>
-    </div>
-    <br>
+
 
 
 </div>

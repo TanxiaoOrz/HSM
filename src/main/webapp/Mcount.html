@@ -16,7 +16,7 @@
             $.get(urlstaff, function (data) {
 
                 console.log(data)
-                let str= `<table valign="center" cellPadding="0" cellSpacing="20">
+                let str= `<table valign="center" cellPadding="0" cellSpacing="30">
                     <tr>
                         <td>员工ID</td>
                         <td>账号名</td>
@@ -41,9 +41,11 @@
             let urldele="http://localhost:8080/HSM_war_exploded/DeleteReception?UserCode="+UserCode;
 
             $.post(urldele, function (data) {
-                console.log(data);
-                console.log("okle")
+                if(data==="删除成功"){
+                    alert("职员信息删除成功");
                     window.location.href=location;
+                }
+                else alert(data);
 
             });
 
@@ -79,10 +81,10 @@
 
 <div id="main" align="center" class="OUTSIDE1">
 
-    <table valign="center" class="L_tb" cellpadding="0" cellspacing="0">
+    <table valign="center" class="L_tb" cellpadding="5" cellspacing="30">
         <tr>
                <td width="33%">
-                    <div class="OUTSIDE1" style="background: gray;height: 350px">
+                    <div class="OUTSIDE1" style="height: 350px">
                         <br>  <h2 align="center">酒店职员名单</h2>
                         <div id="worker" align="center">
 
@@ -93,7 +95,7 @@
 
                 </td>
             <td width="33%">
-                    <div class="OUTSIDE1" style="background: red;height: 350px">
+                    <div class="OUTSIDE1" style="height: 350px">
                       <br>  <h2 align="center">添加新职工</h2>
                         <br>
                         <br>
@@ -108,7 +110,7 @@
 
                 </td>
             <td width="33%">
-                    <div class="OUTSIDE1" style="background: green;height: 350px">
+                    <div class="OUTSIDE1" style="height: 350px">
                         <br><h2 align="center">删除职工账号</h2>
                         <br>
                         <br> <br><br>

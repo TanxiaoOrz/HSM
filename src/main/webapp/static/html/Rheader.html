@@ -2,14 +2,14 @@
 
     <table>
         <tr>
-            <td width="90%">
-                <h1><b>上理酒店顾客系统</b></h1>
+            <td valign="center" align="center" width="90%">
+                <h1><b>上理酒店前台系统</b></h1>
                 <ul>
-                    <li><a href="http://localhost:8080/HSM_war_exploded/Chome.html">主页</a></li>
-                    <li><a href="http://localhost:8080/HSM_war_exploded/Cpersonal.html">个人中心</a></li>
-                    <li><a href="http://localhost:8080/HSM_war_exploded/Cemptyroom.html">今日空房</a></li>
-                    <li><a href="http://localhost:8080/HSM_war_exploded/Chistory.html">我的订单</a></li>
-                    <li><a href="http://localhost:8080/HSM_war_exploded/login.html">登录/注销</a></li>
+                    <li><a href="http://localhost:8080/HSM_war_exploded/Rhome.html">主页</a></li>
+                    <li><a href="http://localhost:8080/HSM_war_exploded/Rroomstatus.html">今日房态</a></li>
+                    <li><a href="http://localhost:8080/HSM_war_exploded/Rhistory.html">订单中心</a></li>
+                    <li><a href="http://localhost:8080/HSM_war_exploded/Remptyroom.html">今日空房</a></li>
+                    <li><a href="http://localhost:8080/HSM_war_exploded/login.html">退出登录</a></li>
 
                 </ul>
             </td>
@@ -44,7 +44,7 @@
 
                             document.getElementById("bt_search").onclick=function () {
                                 let roomID= $("#tv_search").val();
-                                let urlGoSerach = "http://localhost:8080/HSM_war_exploded/Chome.html?Rid="+roomID;
+                                let urlGoSerach = "http://localhost:8080/HSM_war_exploded/Rroomdetail.html?Rid="+roomID;
                                 window.location.href=urlGoSerach;
                             }
 

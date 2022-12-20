@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>上理酒店顾客系统</title>
+    <link rel="stylesheet" type="text/css" href="static/css/header.css">
+    <link type="text/css" rel="stylesheet" href="static/css/style.css">
+    <script src="static/script/jquery-3.6.1.js"></script>
+    <script type="text/javascript" src="static/script/jquery-1.7.2.js"></script>
+    <script>
+        $(function () {
+            $(".headerpage").load("static/html/header.html");
+            $(".footerpage").load("static/html/footer.html");
+
+            let urlGetUserName ="http://localhost:8080/HSM_war_exploded/GetUser";
+            let UserCode;
+            let urlbooks;
+            $.get(urlGetUserName,function (data){
+                if(data===null){
+                    let  str=`<div align="center" style="height: 300px;"><h1 style="padding-top: 100px">当前为房客模式，暂无此操作权限，请先登录</h1></div>`
+                    document.getElementById("main").innerHTML = str;
+                    return false;
+                }
+                UserCode=data.UserCode;
+                urlbooks= "http://localhost:8080/HSM_war_exploded/GetBookByUserCode?UserCode="+UserCode;
+                $.get(urlbooks, function (data) {
+                    let str = `<table align="center" border="0" valign="center" style="text-align: center" cellspacing="0"
+                           cellpadding="10">
+                        <tr>
+                            <th>订单编号</th>
+                            <th>房间ID</th>
+                            <th>客户名称</th>
+                            <th>起始时间</th>
+                            <th>终止时间</th>
+                            <th>订单总价</th>
+                            <th>是否入住</th>
+                            <th>是否结算</th>
+                            <th>入住人</th>
+                        </tr>`;
+                    data.forEach((item) => {
+                        str += `<tr>
+                            <td>${item.Bid}</td>
+                            <td>${item.Rid}</td>
+                            <td>${item.UserCode}</td>
+                            <td>${item.StartTime}</td>
+                            <td>${item.EndTime}</td>
+                            <td>${item.Price}</td>
+                            <td>${item.Checked}</td>
+                            <td>${item.Paid}</td>
+                            <td><input type="button" value="查看" onclick="detail(${item.Bid})"></td>
+                                </tr>`;
+
+                    });
+                    str += `</table><div style="clear:both "></div>`;
+                    document.getElementById("itemss").innerHTML = str;
+                    return false;
+                })
+            })
+
+
+        });
+
+    </script>
+
+
+    <script>
+
+        /*订单详情*/
+        let Bid;
+        function detail(x) {
+                    Bid=x;
+            /*加载已入住*/
+            let urlCheckered = `http://localhost:8080/HSM_war_exploded/GetCheckPeopleByBid?Bid=` + Bid;
+            $.get(urlCheckered, function (data) {
+                console.log(data)
+                if (data.length===0) {
+                    let str = `<h1 align="center">该订单暂未录入房客信息，请联系订单发起人</h1>`
+                    document.getElementById("left").innerHTML = str;
+                    return false;
+                }else {
+                    let str = `<table align="center" border="0" valign="center" style="text-align: center" cellspacing="0"
+                       cellpadding="10">
+                    <tr>
+                        <th>房客ID</th>
+                        <th>房客姓名</th>
+                        <th>房客手机号</th>
+                    </tr>`;
+                    data.forEach((item) => {
+                        str += `<tr>
+                        <td>${item.Cid}</td>
+                        <td>${item.CheckName}</td>
+                        <td>${item.CheckPhone}</td>
+                            </tr>`;
+
+                    });
+                    str += `</table><div style="clear:both "></div>`;
+                    document.getElementById("left").innerHTML = str;
+                    return false;}
+            })
+
+            /*加载所有入住人信息*/
+            let urlGetUserName ="http://localhost:8080/HSM_war_exploded/GetUser";
+            $.get(urlGetUserName,function (data){
+                let Uid=data.Uid;
+                let urlcheckers = "http://localhost:8080/HSM_war_exploded/GetCheckPeopleByUid?Uid="+Uid;
+
+                $.get(urlcheckers, function (data) {
+                    let str = `<table align="center" border="0" valign="center" style="text-align: center" cellspacing="0"
+                       cellpadding="15">
+                    <tr>
+                        <th>入住人编号</th>
+                        <th>入住人姓名</th>
+                        <th>联系电话</th>
+                        <th>选择</th>
+                    </tr>`;
+                    data.forEach((item) => {
+                        str += `<tr>
+                        <td>${item.Cid}</td>
+                        <td> ${item.CheckName}</td>
+                        <td>${item.CheckPhone}</td>
+                        <td><input type="button" onclick="addchecker(${item.Cid})" value="添加"></td>
+                    </tr>`;
+
+                    });
+                    str += `</table><div style="clear:both "></div>`;
+                    document.getElementById("right").innerHTML = str;
+                    return false;
+
+                });
+            })
+
+
+        }
+
+        function addchecker(Cid){
+            let urlad="http://localhost:8080/HSM_war_exploded/AddCheckPeopleToBook?Bid="+Bid+"&Cid="+Cid;
+
+            $.post(urlad,function (data){
+                if(data==="添加成功"){
+                    alert("入住人信息添加成功");
+                    window.location.href=location;
+                }
+                else alert(data);
+
+            })
+        }
+    </script>
+</head>
+<body id="body">
+
+<div align="center" class="headerpage"></div>
+
+
+<div id="main" class="OUTSIDE1">
+    <div align="center" id="divserach"></div>
+
+    <div align="center"><h2>客户订单详情：</h2></div>
+    <div align="center" id="itemss" style="height: 400px;padding-top:10px">
+
+    </div>
+    <div align="center" id="detail" style="height:fit-content;padding-top:0px">
+        <table align="center" border="0" valign="center" style="text-align: center" cellspacing="0"
+               cellpadding="15">
+            <tr>
+                <td id="left">
+                </td>
+              <td id="right"></td>
+            </tr>
+        </table>
+
+    </div>
+</div>
+
+<div align="center" class="footerpage"></div>
+
+
+</body>
+</html>
+

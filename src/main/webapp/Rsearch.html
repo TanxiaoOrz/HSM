@@ -2,14 +2,14 @@
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>上理酒店顾客系统</title>
+    <title>上理酒店前台系统</title>
     <link rel="stylesheet" type="text/css" href="static/css/header.css">
     <link type="text/css" rel="stylesheet" href="static/css/style.css">
     <script src="static/script/jquery-3.6.1.js"></script>
     <script type="text/javascript" src="static/script/jquery-1.7.2.js"></script>
     <script>
         $(function () {
-            $(".headerpage").load("static/html/header.html");
+            $(".headerpage").load("static/html/Rheader.html");
             $(".footerpage").load("static/html/footer.html");
 
             let urltype = "http://localhost:8080/HSM_war_exploded/GetType"
@@ -18,7 +18,7 @@
                 console.log(data);
                 let str = '';
                 data.forEach((item)=>{
-                    str += `<li class="typeHref" ><a href="http://localhost:8080/HSM_war_exploded/Chome.html?Tid=${item.Tid}"</a>${item.TypeName}<br></li><br>`;
+                    str += `<li class="typeHref" ><a href="http://localhost:8080/HSM_war_exploded/Rsearch.html?Tid=${item.Tid}"</a>${item.TypeName}<br></li><br>`;
                 })
                 document.getElementById("typeClass").innerHTML = str;
                 return false;
@@ -37,70 +37,14 @@
                 return vars;
             }
 
-            var flag=false;
-            var Rid = getUrlVars()["Rid"];
-            var Tid= getUrlVars()["Tid"];
-            let urlall;
-            if( typeof Rid === 'undefined' && typeof Tid === 'undefined'){
-                urlall = "http://localhost:8080/HSM_war_exploded/GetRoomAll";
-            }else if( typeof Rid === 'undefined'){
-                urlall="http://localhost:8080/HSM_war_exploded/GetRoomByTid?Tid="+Tid;
-            }
-            else
-            {
-                urlall="http://localhost:8080/HSM_war_exploded/GetRoomServlet?Rid="+Rid;
-                flag=true;
-            }
+            var Tid = getUrlVars()["Tid"];
 
-            if(flag){
-                /*只有一间房*/
-                $.get(urlall, function (data) {
 
-                    let str = '<div align="center"><p><b>本酒店房间详情</b></p></div>';
-                        str+=`<div class="b_list">
-                                <div class="book_info">
-                                <div class="book_left">
-                                    <span class="sp1" name="book1_name"> 房间ID:</span>
-                                    <span class="sp2"> ${data.Rid}</span>
-                                </div>
-                                <div class="book_left">
-                                    <span class="sp1" name="book1_name"> 房间号:</span>
-                                    <span class="sp2"> ${data.Floor}</span>
-                                </div>
-                                <div class="book_left">
-                                    <span class="sp1"> 朝向:</span>
-                                    <span class="sp2"> ${data.Orientation}</span>
-                                </div><br>
-                                <span class="book_left">
-                                    <span class="sp1"> 特征:</span>
-                                    <span class="sp2"> ${data.Feature}</span>
-                                </span>
-                                <div class="book_left">
-                                    <span class="sp1"> 类型:</span>
-                                    <span class="sp2"> ${data.type.TypeName}</span>
-                                </div>
-                                <div class="book_left">
-                                    <span class="sp1"> 价格:</span>
-                                    <span class="sp2"> ${data.type.TypePrice}</span>
-                                </div>
-                                <br>
-                                <div class="book_right" >
-                                    <p align="right" width="100px" style="padding-right: 10px"><a text-align="right" href="http://localhost:8080/HSM_war_exploded/Cbook.html?Rid=${data.Rid}">预定</a>
 
-                                </div>
-                            </div>
-                        </div>`;
+            let urltypeall = "http://localhost:8080/HSM_war_exploded/GetRoomByTid?Tid="+Tid;
 
-                    str+=`<div style="clear:both "></div>`;
-                    document.getElementById("book").innerHTML = str;
-                    return false;
-
-                });
-            }else {
-                /*数组*/
-            $.get(urlall, function (data) {
-
-                let str = '<div align="center"><p><b>本酒店房间详情</b></p></div>';
+            $.get(urltypeall, function (data) {
+                let str = '<div align="center"><p><b>本酒店房型详情</b></p></div>';
                 data.forEach((item) => {
                     str+=`<div class="b_list">
                                 <div class="book_info">
@@ -130,7 +74,7 @@
                                 </div>
                                 <br>
                                 <div class="book_right" >
-                                    <p align="right" width="100px" style="padding-right: 10px"><a text-align="right" href="http://localhost:8080/HSM_war_exploded/Cbook.html?Rid=${item.Rid}">预定</a>
+                                    <p align="right" width="100px" style="padding-right: 10px"><a text-align="right" href="http://localhost:8080/HSM_war_exploded/Rroomdetail.html?Rid=${item.Rid}">了解详情</a>
 
                                 </div>
                             </div>
@@ -143,7 +87,7 @@
 
             });
 
-        }
+
         });
 
 
@@ -178,6 +122,36 @@
                 <div class="OUTSIDE">
                     <div id="book">
 
+                        <!-- <div align="center"><p><b>热门房间推荐</b></p></div><div class="b_list">
+                         <div class="book_info">
+                             <div class="book_left">
+                                 <span class="sp1" name="book1_name"> 房间号:</span>
+                                 <span class="sp2"> ${item.Floor}</span>
+                             </div>
+                             <div class="book_left">
+                                 <span class="sp1"> 朝向:</span>
+                                 <span class="sp2"> ${item.Orientation}</span>
+                             </div>
+                             <div class="book_left">
+                                 <span class="sp1"> 特征:</span>
+                                 <span class="sp2"> ${item.Feature}</span>
+                             </div>
+                             <div class="book_left">
+                                 <span class="sp1"> 类型:</span>
+                                 <span class="sp2"> ${item.type.TypeName}</span>
+                             </div>
+                             <div class="book_left">
+                                 <span class="sp1"> 价格:</span>
+                                 <span class="sp2"> ${item.type.TypePrice}</span>
+                             </div>
+                             <div class="book_right" >
+                                 <p align="right" width="120px"><a text-align="right" href="http://localhost:8080/HSM_war_exploded/GetRoomServlet?Rid=${item.Rid}">修改信息</a>
+
+                             </div>
+                         </div>
+                     </div>
+
+                         <div style="clear:both "></div>-->
 
                     </div>
                     <div style="clear:both "></div>

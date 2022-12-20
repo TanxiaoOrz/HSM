@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>上理酒店经理系统</title>
+    <link rel="stylesheet" type="text/css" href="static/css/header.css">
+    <link type="text/css" rel="stylesheet" href="static/css/style.css">
+    <script src="static/script/jquery-3.6.1.js"></script>
+    <script type="text/javascript" src="static/script/jquery-1.7.2.js"></script>
+    <script>
+        $(function () {
+            $(".headerpage").load("static/html/Rheader.html");
+            $(".footerpage").load("static/html/footer.html");
+
+            function getUrlVars() {
+                var vars = [],
+                    hash;
+                var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+                for (var i = 0; i < hashes.length; i++) {
+                    hash = hashes[i].split('=');
+                    vars.push(hash[0]);
+                    vars[hash[0]] = hash[1];
+                }
+                return vars;
+            }
+
+            var UserCode = getUrlVars()["UserCode"];
+            console.log(UserCode);
+            if( typeof UserCode === 'undefined'){
+              let str2= `<input type="text" placeholder="请输入订单用户名" id="usercode"><input style="margin: 25px" type="button" value="查询" onclick="search1()">`;
+                document.getElementById("divserach").innerHTML = str2;
+                return false;
+            }
+
+            let url = "http://localhost:8080/HSM_war_exploded/GetBookByUserCode?UserCode=" + UserCode;
+            $.get(url, function (data) {
+                console.log(data)
+                let str = `<table align="center" border="0" valign="center" style="text-align: center" cellspacing="0"
+                       cellpadding="10">
+                    <tr>
+                        <th>订单编号</th>
+                        <th>房间ID</th>
+                        <th>客户名称</th>
+                        <th>起始时间</th>
+                        <th>终止时间</th>
+                        <th>订单总价</th>
+                        <th>是否入住</th>
+                        <th>是否结算</th>
+                        <th>办理入住</th>
+                        <th>延长住房</th>
+                        <th>结算账单</th>
+                        <th>查看详情</th>
+                    </tr>`;
+                data.forEach((item) => {
+                    str += `<tr>
+                        <td>${item.Bid}</td>
+                        <td>${item.Rid}</td>
+                        <td>${item.UserCode}</td>
+                        <td>${item.StartTime}</td>
+                        <td><div contenteditable="true" id="time${item.Bid}" name="time">${item.EndTime} </div></td>
+                        <td>${item.Price}</td>
+                        <td>${item.Checked}</td>
+                        <td>${item.Paid}</td>
+                        <td><input type="button" value="入住" onclick="check(${item.Bid})"></td>
+                        <td><input type="button" value="续房" onclick="Delay(${item.Bid})"></td>
+                        <td><input type="button" value="结算" onclick="pay(${item.Bid})"></td>
+                        <td><input type="button" value="详情" onclick="detail(${item.Bid})"></td>
+                            </tr>`;
+
+                });
+                str += `</table><div style="clear:both "></div>`;
+                document.getElementById("itemss").innerHTML = str;
+                return false;
+            })
+
+        });
+
+    </script>
+
+
+    <script>
+
+        function search1(){
+            var UserCode=document.getElementById("usercode").value;
+            let url2="http://localhost:8080/HSM_war_exploded/Rhistory.html?UserCode="+UserCode;
+            window.location.href=url2;
+        }
+
+
+        /*订单详情*/
+        function detail(Bid) {
+            let urlChecker = `http://localhost:8080/HSM_war_exploded/GetCheckPeopleByBid?Bid=` + Bid;
+            $.get(urlChecker, function (data) {
+                console.log(data)
+                if (data.length===0) {
+                    let str = `<h1 align="center">该订单暂未录入房客信息，请联系订单发起人</h1>`
+                    document.getElementById("detail").innerHTML = str;
+                    return false;
+                }else {
+                let str = `<table align="center" border="0" valign="center" style="text-align: center" cellspacing="0"
+                       cellpadding="10">
+                    <tr>
+                        <th>房客ID</th>
+                        <th>房客姓名</th>
+                        <th>房客手机号</th>
+                    </tr>`;
+                data.forEach((item) => {
+                    str += `<tr>
+                        <td>${item.Cid}</td>
+                        <td>${item.CheckName}</td>
+                        <td>${item.CheckPhone}</td>
+                            </tr>`;
+
+                });
+                str += `</table><div style="clear:both "></div>`;
+                document.getElementById("detail").innerHTML = str;
+                return false;}
+            })
+
+        }
+
+
+        /*办理入住*/
+        function check(Bid) {
+            let urlcheck = "http://localhost:8080/HSM_war_exploded/CheckBook?Bid=" + Bid
+            $.post(urlcheck, function (data) {
+                if (data === "入住成功") {
+                    alert("已成功办理入住手续");
+                    window.location.href = location;
+                } else {
+                    alert(data + " 请稍后再试")
+                }
+            })
+
+        }
+
+        /*结算账单*/
+        function pay(Bid) {
+            let urlpay = "http://localhost:8080/HSM_war_exploded/PayBook?Bid=" + Bid
+            $.post(urlpay, function (data) {
+                console.log(data)
+                if (data === "付款成功") {
+                    alert("订单已支付成功");
+                    window.location.href = location;
+                } else {
+                    alert(data + " 请稍后再试")
+                }
+            })
+
+        }
+
+        /*续房*/
+        function Delay(Bid) {
+            var time = document.getElementById("time" + Bid).innerHTML;
+            console.log(time);
+            let urldelay = "http://localhost:8080/HSM_war_exploded/DelayBook?Bid=" + Bid + "&EndTime=" + time;
+            $.post(urldelay, function (data) {
+                console.log(data)
+                if (data === "延长成功") {
+                    alert("已成功办理续住手续");
+                    window.location.href = location;
+                } else {
+                    alert(data + " 请稍后再试")
+                }
+            })
+
+        }
+
+
+    </script>
+</head>
+<body id="body">
+
+<div align="center" class="headerpage"></div>
+
+
+<div id="main" class="OUTSIDE1">
+    <div align="center" id="divserach"></div>
+
+    <div align="center"><h2>客户订单详情：</h2></div>
+    <div align="center" id="itemss" style="height: 400px;padding-top:10px">
+
+    </div>
+    <div align="center" id="detail" style="height: 200px;padding-top:0px">
+
+    </div>
+</div>
+
+<div align="center" class="footerpage"></div>
+
+
+</body>
+</html>
+
