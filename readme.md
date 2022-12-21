@@ -58,7 +58,7 @@ url:/GetUser,无需求参数，无返回代表无登陆
 7.返回指定房间的房间所有信息接口并包含所有预定
 	url:/GetRoom 需求参数：Rid 执行要求：允许普通页面调用，供统计可租住日期  
 8.返回当前可入住房间接口
-	url:/GetRoomEmpty 需求参数 无  
+	url:/GetRoomEmpty 需求参数 无 代表当日，date代表查询日期，请使用XXXX-YY-ZZ   
 9.根据Tid返回所属类型的所有房间
  	url：/GetRoomByTid 需求参数 Tid  
 10.根据Tid返回当前可入住房间

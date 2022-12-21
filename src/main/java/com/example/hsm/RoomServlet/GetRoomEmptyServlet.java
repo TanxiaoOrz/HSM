@@ -10,9 +10,10 @@ import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Date;
 import java.util.ArrayList;
 
-@WebServlet(name = "GetRoomEmptyServlet", value = "/GetRoomEmptyServlet")
+@WebServlet(name = "GetRoomEmptyServlet", value = "/GetRoomEmpty")
 public class GetRoomEmptyServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -22,9 +23,12 @@ public class GetRoomEmptyServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ServletUtil.setCharsetJSON(request,response);
-
-        ArrayList<Room> rooms = RoomDao.getRoomEmpty();
-
+        String date = request.getParameter("date");
+        ArrayList<Room> rooms;
+        if (date==null)
+            rooms = RoomDao.getRoomEmpty();
+        else
+            rooms=RoomDao.getRoomEmptyByDate(Date.valueOf(date));
         String s = new GsonBuilder().create().toJson(rooms);
         PrintWriter writer = response.getWriter();
         writer.print(s);

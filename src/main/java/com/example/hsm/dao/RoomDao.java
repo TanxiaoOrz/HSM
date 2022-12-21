@@ -182,6 +182,42 @@ public class RoomDao {
         }
     }
 
+    public static ArrayList<Room> getRoomEmptyByDate(Date date){
+        Connection connection = DbConnection.getInstance().getConnection();
+        try {
+
+            PreparedStatement statement = connection.prepareStatement("Select * from hsm.`room_type` WHERE `room_type`.`Rid` IN (SELECT  `book`.`Rid` FROM hsm.`book`  WHERE ( ? BETWEEN `book`.`StartTime` AND `book`.`EndTime`)) IS FALSE");
+            statement.setDate(1,date);
+            ResultSet set = statement.executeQuery();
+
+            ArrayList<Room> rooms = new ArrayList<>();
+            while (set.next()){
+
+                Room room =new Room();
+                room.setOrientation(set.getString("Orientation"));
+                room.setFeature(set.getString("Feature"));
+                room.setRid(set.getInt("Rid"));
+                room.setFloor(set.getString("Floor"));
+
+                Type type = new Type();
+                type.setTypePrice(set.getString("TypePrice"));
+                type.setTid(set.getInt("Tid"));
+                type.setTypeName(set.getString("TypeName"));
+
+                room.setType(type);
+
+                rooms.add(room);
+            }
+
+            return rooms;
+
+
+        }catch (SQLException | NullPointerException exception){
+            exception.printStackTrace();
+            return null;
+        }
+    }
+
     public static boolean modifyRoom(Room room){
         Connection connection = DbConnection.getInstance().getConnection();
         try {
