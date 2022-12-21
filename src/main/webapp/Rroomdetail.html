@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>上理酒店经理系统</title>
+    <link rel="stylesheet" type="text/css" href="static/css/header.css">
+    <link type="text/css" rel="stylesheet" href="static/css/style.css">
+    <script src="static/script/jquery-3.6.1.js"></script>
+    <script type="text/javascript" src="static/script/jquery-1.7.2.js"></script>
+    <script>
+        $(function () {
+            $(".headerpage").load("static/html/Rheader.html");
+            $(".footerpage").load("static/html/footer.html");
+
+            function getUrlVars() {
+                var vars = [],
+                    hash;
+                var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+                for (var i = 0; i < hashes.length; i++) {
+                    hash = hashes[i].split('=');
+                    vars.push(hash[0]);
+                    vars[hash[0]] = hash[1];
+                }
+                return vars;
+            }
+
+            var Rid = getUrlVars()["Rid"];
+
+            let urlroom = "http://localhost:8080/HSM_war_exploded/GetRoomServlet?Rid=" + Rid;
+            $.get(urlroom, function (data) {
+
+                console.log(data)
+                let str = `<table align="center" border="0" valign="center" style="text-align: center" cellSpacing=""
+                                cellPadding="25">`;
+                str += `  <tr>
+                        <td>房间ID:</td>
+                        <td> <div  id="Rid" contenteditable="false">${data.Rid}</div></td>
+                        <td>所在楼层:</td>
+                        <td> <div id="Floor" contenteditable="true">${data.Floor}</div></td>
+                    </tr>
+                    <tr>
+                        <td>房型名称:</td>
+                        <td><div id="TypeName" contenteditable="false">${data.type.TypeName}</div></td>
+                        <td>房型价格:</td>
+                        <td><div id="TypePrice" contenteditable="false" >${data.type.TypePrice}</div></td>
+                    </tr>
+                    <tr>
+                        <td align="center" valign="center" colspan="4"><h3>预定信息：</h3></td>
+
+                    </tr>
+                    <tr>
+                        <td align="center" valign="center" colspan="4">
+
+                        <table align="center" border="0" valign="center" style="text-align: center" cellspacing="0" cellpadding="10">
+                       `
+                console.log(data.Books.length)
+                if(data.Books.length===0){
+                    str +=`<tr><td colspan="4" valign="center" align="center"><h2>该房间暂无相关预定信息</h2></td></tr>`
+                }else {
+                for(var i=0;i<data.Books.length;i++){
+
+                    str+=`<tr>
+                        <td>订单编号：${data.Books[i].Bid}</td>
+                        <td>预定人：${data.Books[i].UserCode}</td>
+                        <td>起始时间：${data.Books[i].StartTime}</td>
+                        <td>终止时间：${data.Books[i].EndTime}</td>
+                        <td><input id="book_modify" type="button" value="查看预定" onclick="check(${data.Books[i].UserCode})"></td>
+</tr>`
+                }
+            }
+
+     str+=`</table></td>
+
+                    </tr>
+                    <tr>
+
+                        <td align="center" valign="center" colspan="4" >
+                            <input id="back" type="button" value="返回" onclick="Javascript:history.back()">
+                        </td>
+                    </tr>`;
+                str += `</table><div style="clear:both "></div>`;
+                document.getElementById("itemss").innerHTML = str;
+                return false;
+            })
+
+        });
+
+    </script>
+
+
+    <script>
+
+
+        function check(code) {
+            let urlmodify ="http://localhost:8080/HSM_war_exploded/Rhistory.html?UserCode="+code
+            window.location.href=urlmodify;
+
+        }
+
+
+    </script>
+</head>
+<body id="body">
+
+<div align="center" class="headerpage"></div>
+
+
+<div id="main" class="OUTSIDE1">
+    <div align="center"><h2>房间详情：</h2></div>
+    <div align="center" id="itemss">
+
+
+    </div>
+</div>
+
+<div align="center" class="footerpage"></div>
+
+
+</body>
+</html>
+

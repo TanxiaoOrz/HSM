@@ -33,7 +33,7 @@
                                 cellPadding="15">`;
                 str += `  <tr>
                         <td>房间ID</td>
-                        <td> <div  id="Rid" contenteditable="true">${data.Rid}</div></td>
+                        <td> <div  id="Rid" contenteditable="false">${data.Rid}</div></td>
                     </tr>
                     <tr>
                         <td>所在楼层</td>
@@ -49,7 +49,7 @@
                     </tr>
                     <tr>
                         <td>房型ID</td>
-                        <td><div id="Tid" contenteditable="false">${data.type.Tid}</div></td>
+                        <td><div id="Tid" contenteditable="true">${data.type.Tid}</div></td>
                     </tr>
                     <tr>
                         <td>房型名称</td>
@@ -61,7 +61,9 @@
                     </tr>
                     <tr>
 
-                        <td align="center" valign="center" colspan="2">
+                        <td align="center" valign="center" >
+                            <input id="back" type="button" value="返回" onclick="Javascript:history.back()">
+                        </td><td align="center" valign="center">
                             <input id="book_modify" type="button" value="修改信息" onclick="modify()">
                         </td>
                     </tr>`;
@@ -84,9 +86,14 @@
             var Floor=document.getElementById("Floor").innerHTML;
             var Feature=document.getElementById("Feature").innerHTML;
             var Orientation=document.getElementById("Orientation").innerHTML;
-            let urlmodify = "http://localhost:8080/HSM_war_exploded/ModifyRoom ?Rid="+Rid+"&Floor="+Floor+"&Feature="+Feature+"&Orientation="+Orientation;
+            var Tid=document.getElementById("Tid").innerHTML;
+            let urlmodify = "http://localhost:8080/HSM_war_exploded/ModifyRoom?Rid="+Rid+"&Floor="+Floor+"&Feature="+Feature+"&Orientation="+Orientation+"&Tid="+Tid;
             $.post(urlmodify, function (data) {
-                console.log(data)
+               if(data==="修改成功"){
+                   alert("房间信息修改成功！")
+                   window.location.href=location;
+               }
+               else alert(data)
             })
 
         }

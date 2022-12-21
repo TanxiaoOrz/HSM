@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>上理酒店顾客系统</title>
+    <link rel="stylesheet" type="text/css" href="static/css/header.css">
+    <link type="text/css" rel="stylesheet" href="static/css/style.css">
+    <script src="static/script/jquery-3.6.1.js"></script>
+    <script type="text/javascript" src="static/script/jquery-1.7.2.js"></script>
+    <script>
+        $(function () {
+            $(".headerpage").load("static/html/header.html");
+            $(".footerpage").load("static/html/footer.html");
+
+            let urlGetUserName ="http://localhost:8080/HSM_war_exploded/GetUser";
+            let Uid;
+            $.get(urlGetUserName,function (data){
+                if(data===null){
+                    let  str=`<div align="center" style="height: 300px;"><h1 style="padding-top: 100px">当前为房客模式，暂无此操作权限，请先登录</h1></div>`
+                    document.getElementById("main").innerHTML = str;
+                    return false;
+                }
+                Uid=data.Uid;
+                let urlbook = "http://localhost:8080/HSM_war_exploded/GetBookByUserCode?UserCode="+data.UserCode;
+                $.get(urlbook, function (data) {
+                    let str = `<table align="center" border="0" valign="center" style="text-align: center" cellspacing="0"
+                       cellpadding="10">
+                    <tr>
+                        <th>订单编号</th>
+                        <th>房间ID</th>
+                        <th>客户名称</th>
+                        <th>起始时间</th>
+                        <th>终止时间</th>
+                        <th>订单总价</th>
+                        <th>是否入住</th>
+                        <th>是否结算</th>
+                        <th>查看详情</th>
+                    </tr>`;
+
+                        str += `<tr>
+                        <td>${data[0].Bid}</td>
+                        <td>${data[0].Rid}</td>
+                        <td>${data[0].UserCode}</td>
+                        <td>${data[0].StartTime}</td>
+                        <td>${data[0].EndTime}</td>
+                        <td>${data[0].Price}</td>
+                        <td>${data[0].Checked}</td>
+                        <td>${data[0].Paid}</td>
+                        <td><input type="button" value="详情" onclick="detail()"></td>
+                            </tr>`;
+
+                    str += `</table><div style="clear:both "></div>`;
+                    document.getElementById("recently").innerHTML = str;
+                    return false;
+                })
+            })
+
+
+
+            /*加载住户*/
+            let urlcheckers = "http://localhost:8080/HSM_war_exploded/GetCheckPeopleByUid?Uid="+Uid;
+
+            $.get(urlcheckers, function (data) {
+                    let str = `<table align="center" border="0" valign="center" style="text-align: center" cellspacing="0"
+                       cellpadding="15">
+                    <tr>
+                        <th>入住人编号</th>
+                        <th>入住人姓名</th>
+                        <th>联系电话</th>
+                    </tr>`;
+                data.forEach((item) => {
+                        str += `<tr>
+                        <td>${item.Cid}</td>
+                        <td> ${item.CheckName}</td>
+                        <td>${item.CheckPhone}</td>
+                    </tr>`;
+
+                    });
+                    str += `</table><div style="clear:both "></div>`;
+                    document.getElementById("address").innerHTML = str;
+                    return false;
+
+            });
+            /*最新订单*/
+
+
+            /*新增入住人*/
+            $("#bt_newadd").click(function (){
+
+                let Nadd=document.getElementById("Nadd").value;
+                let Nreceiver=document.getElementById("Nreceiver").value;
+                let Nphone=document.getElementById("Nphone").value;
+
+                let urlnewaddress="http://localhost:8080/HSM_war_exploded/NewCheckPeople" +
+                    "?CheckCode="+Nadd+"&CheckPhone="+Nphone+"&CheckName="+Nreceiver;
+
+                $.post(urlnewaddress, function (data){
+                    alert(data);
+                    window.location.replace(location);
+
+                })
+
+            });
+
+        });
+    </script>
+    <script>
+
+        function detail(){
+            window.location.href="http://localhost:8080/HSM_war_exploded/Chistory.html;"
+        }
+    </script>
+</head>
+
+
+<body id="body">
+
+<div align="center" class="headerpage"></div>
+
+
+<div id="main" class="OUTSIDE">
+
+    <table class="content_tb" cellpadding="0" cellspacing="0">
+        <tr style="height: 300px">
+
+            <!--入住人信息-->
+            <td align="center" valign="top" width="50%" class="OUTSIDE1">
+                <br>
+                <h1>常用入住人</h1>
+                <br>
+                <div style="overflow: auto;height: 300px" id="address">
+                </div>
+
+            </td>
+
+            <!--增加入住人-->
+            <td width="50%" class="OUTSIDE1">
+
+                <div align="center" >
+                    <div style="padding: 15px">入住人ID：<input id="Nadd" type="text"><br></div>
+                    <div style="padding-left: 25px">入住人姓名：<input id="Nreceiver" type="text"><br></div>
+                    <div style="padding: 15px">联系电话：<input id="Nphone" type="number"></div>
+
+                    <div style="float: right;padding-right: 100px">
+                        <input type="button" id="bt_newadd" value="添加">
+                    </div>
+                </div>
+            </td>
+
+        </tr>
+
+        <tr style="height: 150px">
+
+            <!--啥也没有-->
+            <td align="center" colspan="2" width="50%" class="OUTSIDE1" id="recently">
+            </td>
+
+
+        </tr>
+    </table>
+
+
+</div>
+<div align="center" class="footerpage"></div>
+
+
+</body>
+</html>
+

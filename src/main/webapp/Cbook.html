@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>上理酒店顾客系统</title>
+    <link rel="stylesheet" type="text/css" href="static/css/header.css">
+    <link type="text/css" rel="stylesheet" href="static/css/style.css">
+    <script src="static/script/jquery-3.6.1.js"></script>
+    <script type="text/javascript" src="static/script/jquery-1.7.2.js"></script>
+    <script>
+        $(function () {
+            $(".headerpage").load("static/html/header.html");
+            $(".footerpage").load("static/html/footer.html");
+
+            let urlGetUserName ="http://localhost:8080/HSM_war_exploded/GetUser";
+            $.get(urlGetUserName,function (data){
+                if(data===null){
+                    let  str=`<div align="center" style="height: 300px;"><h1 style="padding-top: 100px">当前为房客模式，暂无此操作权限，请先登录</h1></div>`
+                    document.getElementById("main").innerHTML = str;
+                    return false;
+                }})
+
+            function getUrlVars() {
+                var vars = [],
+                    hash;
+                var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+                for (var i = 0; i < hashes.length; i++) {
+                    hash = hashes[i].split('=');
+                    vars.push(hash[0]);
+                    vars[hash[0]] = hash[1];
+                }
+                return vars;
+            }
+
+            var Rid = getUrlVars()["Rid"];
+
+            urlall="http://localhost:8080/HSM_war_exploded/GetRoomServlet?Rid="+Rid;
+
+            $.get(urlall, function (data) {
+
+                let str = '<div align="center"><p><b>订单填写</b></p></div>';
+                str+=`<div class="b_list">
+                                <div class="book_info">
+                                <div class="book_left">
+                                    <span class="sp1" name="book1_name"> 房间号:</span>
+                                    <span class="sp2"> ${data.Floor}</span>
+                                </div>
+                                <div class="book_left">
+                                    <span class="sp1"> 朝向:</span>
+                                    <span class="sp2"> ${data.Orientation}</span>
+                                </div><br>
+                                <span class="book_left">
+                                    <span class="sp1"> 特征:</span>
+                                    <span class="sp2"> ${data.Feature}</span>
+                                </span>
+                                <div class="book_left">
+                                    <span class="sp1"> 类型:</span>
+                                    <span class="sp2"> ${data.type.TypeName}</span>
+                                </div>
+                                <div class="book_left">
+                                    <span class="sp1"> 价格:</span>
+                                    <span class="sp2"> ${data.type.TypePrice}</span>
+                                </div>
+                                <br>
+                                <div class="book_left">
+                                    <span class="sp1" name="book1_name"> BT:</span>
+                                    <span class="sp2"><input type="date" id="BT"></span>
+                                </div>
+                                <br>
+                                <div class="book_left">
+                                    <span class="sp1" name="book1_name"> ET:</span>
+                                    <span class="sp2"> <input type="date" id="ET"></span>
+                                </div>
+                                <br>
+                                <div class="book_right" >
+                                    <p align="right" width="100px" style="padding-right: 10px"><input type="button" value="提交" onclick="book(${data.Rid})">
+
+                                </div>
+                            </div>
+                        </div>`;
+
+                str+=`<div style="clear:both "></div>`;
+                document.getElementById("book").innerHTML = str;
+                return false;
+
+            });
+
+
+
+        });
+
+    </script>
+
+
+    <script>
+
+        function book(Rid){
+
+            var bt=document.getElementById("BT").value;
+            var et=document.getElementById("ET").value;
+            let urladd="http://localhost:8080/HSM_war_exploded/NewBook?Rid="+Rid+"&StartTime="+bt+"&EndTime="+et;
+
+            console.log(urladd)
+            $.get(urladd, function (data) {
+                if(data==="新建成功"){
+                    alert("房间预定成功！")
+                    window.location.href="http://localhost:8080/HSM_war_exploded/Chistory.html";
+                }
+                else alert(data+"预定房间时间冲突，请重试");
+            });
+
+        }
+    </script>
+</head>
+<body id="body">
+
+<div align="center" class="headerpage"></div>
+
+
+<div id="main" align="center" class="OUTSIDE">
+
+    <table valign="center" class="L_tb">
+        <tr>
+
+
+            <td width="100%">
+                <div class="OUTSIDE">
+                    <div id="book">
+
+
+                    </div>
+                    <div style="clear:both "></div>
+                </div>
+
+            </td>
+
+
+        </tr>
+    </table>
+
+    <br>
+
+
+
+</div>
+
+<div align="center" class="footerpage"></div>
+
+
+</body>
+</html>
+

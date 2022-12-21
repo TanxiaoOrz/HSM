@@ -16,7 +16,7 @@
             $.get(urlstaff, function (data) {
 
                 let str = `<table align="center" border="0" valign="center" style="text-align: center" cellspacing="0"
-                       cellpadding="30">
+                       cellpadding="60">
                     <tr>
                         <th>房型ID</th>
                         <th>房型名称</th>
@@ -27,9 +27,9 @@
                 data.forEach((item)=>{
                     str +=`<tr>
                         <td>${item.Tid}</td>
-                        <td>${item.TypeName}</td>
+                        <td><div id="type${item.Tid}" contenteditable="true" >${item.TypeName}</div></td>
                         <td ><div id="${item.Tid}" contenteditable="true" >${item.TypePrice}</div></td>
-                        <td><input type="button" value="修改价格" onclick="modify(${item.Tid},'${item.TypeName}')"></td>
+                        <td><input type="button" value="修改" onclick="modify(${item.Tid})"></td>
                     </tr>`
 
                 })
@@ -48,11 +48,16 @@
 
 
         /*修改房型*/
-        function modify(Tid,Tname){
+        function modify(Tid){
+            var type=document.getElementById("type"+Tid).innerHTML;
             var price=document.getElementById(Tid).innerHTML;
-            let urlmodify = "http://localhost:8080/HSM_war_exploded/ModifyType?Tid="+Tid+"&TypeName="+Tname+"&TypePrice="+price;
+            let urlmodify = "http://localhost:8080/HSM_war_exploded/ModifyType?Tid="+Tid+"&TypeName="+type+"&TypePrice="+price;
             $.post(urlmodify, function (data) {
-                console.log(data)
+                if(data==="修改成功"){
+                    alert("房型信息修改成功");
+                    window.location.href=location;
+                }
+                else alert(data);
             })
 
         }
