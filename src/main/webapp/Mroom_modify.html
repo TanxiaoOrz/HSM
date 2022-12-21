@@ -28,6 +28,11 @@
 
             let urlroom ="http://localhost:8080/HSM_war_exploded/GetRoomServlet?Rid="+Rid;
             $.get(urlroom, function (data) {
+                if(data===null){
+                    let str1=`<h1 align="center" style="margin-top: 100px">无效房间号，请重新查询</h1>`;
+                    document.getElementById("itemss").innerHTML = str1;
+                    return false;
+                }
 
                 let str = `<table align="center" border="0" valign="center" style="text-align: center" cellSpacing="0"
                                 cellPadding="15">`;

@@ -34,6 +34,13 @@
 
             let url = "http://localhost:8080/HSM_war_exploded/GetBookByUserCode?UserCode=" + UserCode;
             $.get(url, function (data) {
+                if(data.length===0){
+                    let str=`<h1 align="center" style="margin-top: 100px">暂无该用户的相关订单</h1>`;
+                    document.getElementById("itemss").innerHTML = str;
+                    return false;
+                }
+
+
                 console.log(data)
                 let str = `<table align="center" border="0" valign="center" style="text-align: center" cellspacing="0"
                        cellpadding="10">

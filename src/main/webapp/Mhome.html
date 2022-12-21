@@ -12,18 +12,6 @@
             $(".headerpage").load("static/html/Mheader.html");
             $(".footerpage").load("static/html/footer.html");
 
-            /*let urltype = "http://localhost:8080/HSM_war_exploded/GetType"
-            $.get(urltype, function (data) {
-
-                console.log(data);
-                let str = '';
-                data.forEach((item)=>{
-                    str += `<li class="typeHref" ><a href="http://localhost:8080/HSM_war_exploded/GetTypeByTid?Tid=${item.Tid}"</a>${item.TypeName}<br></li><br>`;
-                })
-                document.getElementById("typeClass").innerHTML = str;
-                return false;
-            });*/
-
 
 
             let urlall = "http://localhost:8080/HSM_war_exploded/GetRoomAll";

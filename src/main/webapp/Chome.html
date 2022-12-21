@@ -55,7 +55,11 @@
             if(flag){
                 /*只有一间房*/
                 $.get(urlall, function (data) {
-
+                    if(data===null){
+                        let str=`<h1 align="center" style="margin-top: 100px">无效房间号，请重新查询或联系前台工作人员</h1>`;
+                        document.getElementById("book").innerHTML = str;
+                        return false;
+                    }
                     let str = '<div align="center"><p><b>本酒店房间详情</b></p></div>';
                         str+=`<div class="b_list">
                                 <div class="book_info">

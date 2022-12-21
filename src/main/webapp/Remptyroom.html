@@ -13,9 +13,7 @@
             $(".footerpage").load("static/html/footer.html");
 
             let urltype = "http://localhost:8080/HSM_war_exploded/GetType"
-            $.get(urltype, function (data) {
-
-                console.log(data);
+            $.post(urltype, function (data) {
                 let str = '';
                 data.forEach((item)=>{
                     str += `<li class="typeHref" ><a href="http://localhost:8080/HSM_war_exploded/Remptyroom.html?Tid=${item.Tid}"</a>${item.TypeName}<br></li><br>`;
@@ -37,17 +35,23 @@
             }
 
             var Tid = getUrlVars()["Tid"];
+            var date = getUrlVars()["date"];
             console.log(Tid)
+            console.log(date)
             let urlall;
-            if( typeof Tid === 'undefined') {
-                urlall = "http://localhost:8080/HSM_war_exploded/GetRoomEmptyServlet";
+            if( typeof Tid === 'undefined' && typeof date === 'undefined') {
+                urlall = "http://localhost:8080/HSM_war_exploded/GetRoomEmpty";
 
-            }else {
+            }else if( typeof date === 'undefined') {
                 urlall = "http://localhost:8080/HSM_war_exploded/GetRoomEmptyByTid?Tid=" + Tid;
-        }
-            $.get(urlall, function (data) {
+            }else {
+                urlall="http://localhost:8080/HSM_war_exploded/GetRoomEmpty?date="+date
+            }
+            console.log(urlall)
+            $.post(urlall, function (data) {
 
-                let str = '<div align="center"><p><b>本酒店今日所有空房详情</b></p></div>';
+                console.log(urlall)
+                let str = '<div align="center"><p><b>本酒店所有空房详情</b></p></div>';
                 data.forEach((item) => {
                     str+=`<div class="b_list">
                                 <div class="book_info">
@@ -91,11 +95,20 @@
             });
 
 
+
+
+
         });
 
 
         /*图书书名查询*/
 
+    </script>
+    <script>
+        function query(){
+            let date=document.getElementById("date").value;
+            window.location.href="http://localhost:8080/HSM_war_exploded/Remptyroom.html?date="+date;
+        }
     </script>
 </head>
 <body id="body">
@@ -123,38 +136,8 @@
 
             <td width="85%">
                 <div class="OUTSIDE">
+                    <div align="center">请选择您要查询的日期 <input style="margin-left: 15px" type="date" id="date"><input style="margin-left: 45px" type="button" value="查询" onclick="query()"></div>
                     <div id="book">
-
-                        <!-- <div align="center"><p><b>热门房间推荐</b></p></div><div class="b_list">
-                         <div class="book_info">
-                             <div class="book_left">
-                                 <span class="sp1" name="book1_name"> 房间号:</span>
-                                 <span class="sp2"> ${item.Floor}</span>
-                             </div>
-                             <div class="book_left">
-                                 <span class="sp1"> 朝向:</span>
-                                 <span class="sp2"> ${item.Orientation}</span>
-                             </div>
-                             <div class="book_left">
-                                 <span class="sp1"> 特征:</span>
-                                 <span class="sp2"> ${item.Feature}</span>
-                             </div>
-                             <div class="book_left">
-                                 <span class="sp1"> 类型:</span>
-                                 <span class="sp2"> ${item.type.TypeName}</span>
-                             </div>
-                             <div class="book_left">
-                                 <span class="sp1"> 价格:</span>
-                                 <span class="sp2"> ${item.type.TypePrice}</span>
-                             </div>
-                             <div class="book_right" >
-                                 <p align="right" width="120px"><a text-align="right" href="http://localhost:8080/HSM_war_exploded/GetRoomServlet?Rid=${item.Rid}">修改信息</a>
-
-                             </div>
-                         </div>
-                     </div>
-
-                         <div style="clear:both "></div>-->
 
                     </div>
                     <div style="clear:both "></div>

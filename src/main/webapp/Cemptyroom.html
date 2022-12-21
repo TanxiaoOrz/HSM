@@ -14,8 +14,6 @@
 
             let urltype = "http://localhost:8080/HSM_war_exploded/GetType"
             $.get(urltype, function (data) {
-
-                console.log(data);
                 let str = '';
                 data.forEach((item)=>{
                     str += `<li class="typeHref" ><a href="http://localhost:8080/HSM_war_exploded/Cemptyroom.html?Tid=${item.Tid}"</a>${item.TypeName}<br></li><br>`;
@@ -37,17 +35,23 @@
             }
 
             var Tid = getUrlVars()["Tid"];
+            var date = getUrlVars()["date"];
             console.log(Tid)
+            console.log(date)
             let urlall;
-            if( typeof Tid === 'undefined') {
-                urlall = "http://localhost:8080/HSM_war_exploded/GetRoomEmptyServlet";
+            if( typeof Tid === 'undefined' && typeof date === 'undefined') {
+                urlall = "http://localhost:8080/HSM_war_exploded/GetRoomEmpty";
 
-            }else {
+            }else if( typeof date === 'undefined') {
                 urlall = "http://localhost:8080/HSM_war_exploded/GetRoomEmptyByTid?Tid=" + Tid;
-        }
+        }else {
+                urlall="http://localhost:8080/HSM_war_exploded/GetRoomEmpty?date="+date
+            }
+            console.log(urlall)
             $.get(urlall, function (data) {
 
-                let str = '<div align="center"><p><b>本酒店今日所有空房详情</b></p></div>';
+                console.log(urlall)
+                let str = '<div align="center"><p><b>本酒店所有空房详情</b></p></div>';
                 data.forEach((item) => {
                     str+=`<div class="b_list">
                                 <div class="book_info">
@@ -91,11 +95,20 @@
             });
 
 
+
+
+
         });
 
 
         /*图书书名查询*/
 
+    </script>
+    <script>
+        function query(){
+            let date=document.getElementById("date").value;
+            window.location.href="http://localhost:8080/HSM_war_exploded/Cemptyroom.html?date="+date;
+        }
     </script>
 </head>
 <body id="body">
@@ -123,7 +136,9 @@
 
             <td width="85%">
                 <div class="OUTSIDE">
+                    <div align="center">请选择您要查询的日期 <input style="margin-left: 15px" type="date" id="date"><input style="margin-left: 45px" type="button" value="查询" onclick="query()"></div>
                     <div id="book">
+
                     </div>
                     <div style="clear:both "></div>
                 </div>

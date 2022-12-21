@@ -15,7 +15,16 @@
             let urlGetUserName ="http://localhost:8080/HSM_war_exploded/GetUser";
             $.get(urlGetUserName,function (data){
                 if(data===null){
-                    let  str=`<div align="center" style="height: 300px;"><h1 style="padding-top: 100px">当前为房客模式，暂无此操作权限，请先登录</h1></div>`
+                    let  str=`<div align="center" style="height: 400px;"><h1 style="padding-top: 30px">当前为房客模式，暂无此操作权限，请先登录</h1><br>
+<br><h2 align="center">上理酒店简介</h2><br>
+                               上理酒店是世界上唯一的七星级酒店，位于军工路516号，一共有4层、321米高，曾是全球最高的酒店，比法国艾菲尔铁塔还高上一截。
+
+                            酒店拥有30间豪华房，餐厅位于最顶层，极其华丽。200米高的可以俯瞰上海全城的餐厅以及世界上最高的中庭，除了是一座酒店，更是来此旅游的人定要参观的景点。
+
+                            酒店内部装饰布置极尽奢华之能，触目皆金，房间内用品均为世界顶级奢侈品牌制造，酒店的AI-Mahara海鲜餐厅位于海底，需乘坐潜艇到达。
+
+                            客房面积从170平方米到780平方米不等，最低房价也要900美元/天，最高的总统套房则要18000美元/天。总统套房在第25层，家具是镀金的，设有一个电影院，两间卧室，两间起居室，一个餐厅，出入有专用电梯。
+                        </div>`
                     document.getElementById("main").innerHTML = str;
                     return false;
                 }})
@@ -126,6 +135,7 @@
             <td width="100%">
                 <div class="OUTSIDE">
                     <div id="book">
+
 
 
                     </div>
