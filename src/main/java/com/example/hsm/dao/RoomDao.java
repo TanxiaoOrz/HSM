@@ -66,6 +66,9 @@ public class RoomDao {
                 rooms.add(room);
             }
 
+            set.close();
+            statement.close();
+            connection.close();
             return rooms;
 
 
@@ -102,6 +105,9 @@ public class RoomDao {
                 rooms.add(room);
             }
 
+            set.close();
+            statement.close();
+            connection.close();
             return rooms;
 
 
@@ -138,6 +144,9 @@ public class RoomDao {
                 rooms.add(room);
             }
 
+            set.close();
+            statement.close();
+            connection.close();
             return rooms;
 
 
@@ -173,6 +182,9 @@ public class RoomDao {
                 rooms.add(room);
             }
 
+            set.close();
+            statement.close();
+            connection.close();
             return rooms;
 
 
@@ -207,8 +219,12 @@ public class RoomDao {
                 room.setType(type);
 
                 rooms.add(room);
+
             }
 
+            set.close();
+            statement.close();
+            connection.close();
             return rooms;
 
 
@@ -229,6 +245,7 @@ public class RoomDao {
             statement.setInt(5,room.getRid());
             //System.out.println(statement);
             int result = statement.executeUpdate();
+
 
             statement.close();
             connection.close();
